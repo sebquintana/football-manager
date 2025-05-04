@@ -1,10 +1,15 @@
-export default {
+import { PlayerPersistence } from '@infrastructure/adapters/persistence/player.entity';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+
+const config: TypeOrmModuleOptions = {
   type: 'postgres',
   host: 'localhost',
   port: 5432,
   username: 'your_username',
   password: 'your_password',
-  database: 'team_balancer',
-  entities: [__dirname + '/domain/entities/*.entity{.ts,.js}'],
-  synchronize: true,
+  database: 'football_manager',
+  entities: [PlayerPersistence],
+  synchronize: true, // Set to false in production
 };
+
+export default config;

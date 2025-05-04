@@ -1,13 +1,19 @@
-import { Player } from '@domain/entities/player.entity';
-import { BalancedTeams } from '@domain/entities/balanced-teams.entity';
+import { Player } from '@domain/entities/player';
 import { MinimumPlayersError, PlayerNotFoundError } from '@domain/errors/custom.errors';
 import { PlayerRepository } from '@domain/ports/player.repository';
+import { Inject } from '@nestjs/common';
 
 export class TeamBalanceService {
-  constructor(readonly playersRepository: PlayerRepository) {}
+  constructor(@Inject('PlayerRepository') readonly playersRepository: PlayerRepository) {}
 
-  async generateBalancedTeams(playersNames: string[]): Promise<BalancedTeams> {
-    if (playersNames.length < 10) {
+  async generateBalancedTeams(
+    playersNames: string[],
+  ): Promise<{ teamA: string[]; teamB: string[]; difference: number }> {
+    if (!Array.isArray(playersNames)) {
+      throw new TypeError('playersNames must be an array of strings');
+    }
+
+    if (!playersNames || playersNames.length < 10) {
       throw new MinimumPlayersError();
     }
 
@@ -35,7 +41,11 @@ export class TeamBalanceService {
 
     const difference = Math.abs(this.getTeamElo(teamA) - this.getTeamElo(teamB));
 
-    return new BalancedTeams(teamA, teamB, difference);
+    return {
+      teamA: teamA.map((player) => player.name),
+      teamB: teamB.map((player) => player.name),
+      difference,
+    };
   }
 
   private getTeamElo(team: Player[]): number {

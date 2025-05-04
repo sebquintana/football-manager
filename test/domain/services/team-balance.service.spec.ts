@@ -1,4 +1,4 @@
-import { Player } from '@domain/entities/player.entity';
+import { Player } from '@domain/entities/player';
 import { TeamBalanceService } from '@domain/services/team-balance.service';
 import { MinimumPlayersError, PlayerNotFoundError } from '@domain/errors/custom.errors';
 import { TypeOrmPlayerRepository } from '@infrastructure/adapters/persistence/typeorm-player-repository';
@@ -46,8 +46,8 @@ describe('TeamBalanceService', () => {
 
     const { teamA, teamB, difference } = await service.generateBalancedTeams(players);
 
-    const nicoTeam = teamA.find((p) => p.name === 'Nico') ? 'A' : 'B';
-    const nahueTeam = teamA.find((p) => p.name === 'Nahue') ? 'A' : 'B';
+    const nicoTeam = teamA.includes('Nico') ? 'A' : 'B';
+    const nahueTeam = teamA.includes('Nahue') ? 'A' : 'B';
 
     expect(nicoTeam).not.toEqual(nahueTeam);
     expect(teamA.length).toBe(5);

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "API for balanced football teams using Elo and NestJS",
   "main": "dist/main.js",
+  "type": "commonjs",
   "scripts": {
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -11,7 +12,9 @@
     "lint": "eslint \"src/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage"
+    "test:cov": "jest --coverage",
+    "start:local": "docker-compose up -d && npm run start",
+    "build:tsc": "tsc"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

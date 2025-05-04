@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 
-@Injectable()
-@Entity('players')
+@Entity('player')
 @Index(['name'], { unique: true })
 export class PlayerPersistence {
   @PrimaryGeneratedColumn('uuid')
@@ -17,4 +15,3 @@ export class PlayerPersistence {
   @Column({ name: 'initial_elo' })
   initialElo: number = 0;
 }
-

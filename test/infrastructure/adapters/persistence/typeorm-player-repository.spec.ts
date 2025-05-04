@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Player } from '@domain/entities/player.entity';
-import { PlayerPersistence } from '@infrastructure/adapters/persistence/player.persistence';
+import { Player } from '@domain/entities/player';
+import { PlayerPersistence } from '@infrastructure/adapters/persistence/player.entity';
 import { TypeOrmPlayerRepository } from '@infrastructure/adapters/persistence/typeorm-player-repository';
 
 const mockPlayerPersistence = {

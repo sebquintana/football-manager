@@ -1,9 +1,9 @@
-import { Player } from '@domain/entities/player.entity';
+import { Player } from '@domain/entities/player';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
-import { PlayerPersistence } from './player.persistence';
+import { PlayerPersistence } from './player.entity';
 import { PlayerRepository } from '@domain/ports/player.repository';
 
 export class TypeOrmPlayerRepository implements PlayerRepository {
@@ -23,7 +23,7 @@ export class TypeOrmPlayerRepository implements PlayerRepository {
   async findByName(name: string): Promise<Player> {
     const player = await this.playerRepository.findOne({ where: { name } });
     if (!player) {
-      throw new Error(`Player with name ${name} not found`);  
+      throw new Error(`Player with name ${name} not found`);
     }
     return new Player(player.id, player.name, player.elo, player.initialElo);
   }

@@ -3,11 +3,13 @@
     "target": "ES2021",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "baseUrl": "./src",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
     "paths": {
-      "@domain/*": ["domain/*"],
-      "@application/*": ["application/*"],
-      "@infrastructure/*": ["infrastructure/*"],
+      "@domain/*": ["src/domain/*"],
+      "@application/*": ["src/application/*"],
+      "@infrastructure/*": ["src/infrastructure/*"],
     },
     "esModuleInterop": true,
     "strict": true,
@@ -19,3 +21,4 @@
   "include": ["src", "test"],
   "exclude": ["node_modules"]
 }
+
