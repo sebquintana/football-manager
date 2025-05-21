@@ -6,6 +6,7 @@ import { MatchRepository } from '@domain/ports/match.repository';
 import { CreateMatchDto } from '../dto/create-match.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Player } from '@domain/entities/player';
+import { MatchResultService } from '@domain/services/match-result.service';
 
 @Injectable()
 export class CreateMatchUseCase {
@@ -35,8 +36,11 @@ export class CreateMatchUseCase {
       dto.goalDifference,
     );
 
-    // Acá actualizarías ELOs y estadísticas de cada jugador
-    // Podés hacerlo con un EloService o en una fase siguiente
+    const updatedPlayers = MatchResultService.processMatch(match);
+
+    for (const updated of updatedPlayers) {
+     await this.playerRepository.save(updated);
+    }
 
     await this.matchRepository.save(match);
     return match;

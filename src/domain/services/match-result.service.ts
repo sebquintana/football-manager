@@ -1,48 +1,57 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Match } from '@domain/entities/match';
-import { MatchService } from './match.service';
-import { MatchPlayerService } from './match-player.service';
-import { PlayerService } from './player.service';
-import { MatchPlayer } from '@domain/entities/match-player';
+import { Match } from '../entities/match';
+import { Player } from '../entities/player';
+import { EloChange } from '../entities/elo-change';
 
-@Injectable()
 export class MatchResultService {
-  constructor(
-    private readonly matchService: MatchService,
-    private readonly matchPlayerService: MatchPlayerService,
-    private readonly playerService: PlayerService,
-  ) {}
+  static processMatch(match: Match): Player[] {
+    const updatedPlayers: Player[] = [];
 
-  async saveMatchResult(matchData: {
-    teamWinner: 'A' | 'B' | 'EMPATE';
-    goalDifference: number;
-    players: { id: string; team: 'A' | 'B'; elo: number }[];
-  }): Promise<void> {
-    const match: Match = await this.matchService.saveMatch(
-      new Date().toISOString(),
-      matchData.teamWinner,
-      matchData.goalDifference,
-    );
+    const teamAWon = match.winner === 'A';
+    const teamBWon = match.winner === 'B';
+    const draw = match.winner === 'draw';
 
-    // Prepare match player records and update player ELOs
-    const matchPlayers: MatchPlayer[] = [];
-    for (const player of matchData.players) {
-      const isWinner = player.team === matchData.teamWinner;
-      const eloChange = isWinner ? 10 + matchData.goalDifference : -(10 + matchData.goalDifference);
-
-      // Update player ELO
-      const updatedPlayer = await this.playerService.updateElo(player.id, player.elo + eloChange);
-
-      // Create match player record
-      matchPlayers.push({
-        matchId: match.id,
-        playerId: player.id,
-        team: player.team,
-        eloBefore: player.elo,
-        eloAfter: updatedPlayer.elo,
-      } as MatchPlayer);
+    for (const player of match.teamA.players) {
+      const updated = MatchResultService.updatePlayer(player, teamAWon, teamBWon, draw, match.goalDifference);
+      updatedPlayers.push(updated);
     }
 
-    this.matchPlayerService.saveMatchPlayers(matchPlayers);
+    for (const player of match.teamB.players) {
+      const updated = MatchResultService.updatePlayer(player, teamBWon, teamAWon, draw, match.goalDifference);
+      updatedPlayers.push(updated);
+    }
+
+    return updatedPlayers;
+  }
+
+  private static updatePlayer(
+    player: Player,
+    won: boolean,
+    lost: boolean,
+    draw: boolean,
+    goalDiff: number,
+  ): Player {
+    let newElo = player.elo;
+    const POINTS_PER_GAME = 10;
+
+    if (won) newElo += POINTS_PER_GAME + goalDiff;
+    if (lost) newElo -= POINTS_PER_GAME + goalDiff;
+
+    const winCount = player.winCount + (won ? 1 : 0);
+    const lossCount = player.lossCount + (lost ? 1 : 0);
+    const drawCount = player.drawCount + (draw ? 1 : 0);
+
+    return new Player(
+      player.id,
+      player.name,
+      newElo,
+      player.initialElo,
+      player.totalMatchesPlayed + 1,
+      winCount,
+      lossCount,
+      drawCount,
+      player.goalsFor + (won ? goalDiff : 0),
+      player.goalsAgainst + (lost ? goalDiff : 0),
+      [...player.history, new EloChange(player.elo, newElo)],
+    );
   }
 }
