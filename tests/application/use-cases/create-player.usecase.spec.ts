@@ -10,6 +10,7 @@ describe('CreatePlayerUseCase', () => {
   beforeEach(() => {
     mockRepo = {
       save: jest.fn(),
+      findAll: jest.fn(),
     };
     useCase = new CreatePlayerUseCase(mockRepo);
   });

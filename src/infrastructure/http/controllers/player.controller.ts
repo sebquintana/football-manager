@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CreatePlayerUseCase } from '@application/use-cases/create-player.usecase';
+import { GetAllPlayersUseCase } from '@application/use-cases/get-all-players.usecase';
 import { CreatePlayerDto } from '@application/dto/create-player.dto';
 import { Player } from '@domain/entities/player';
 
@@ -11,4 +12,9 @@ export class PlayerController {
   async create(@Body() dto: CreatePlayerDto): Promise<Player> {
     return this.createPlayerUseCase.execute(dto);
   }
+
+  @Get()
+  async findAll(): Promise<Player[]> {
+    return this.getAllPlayersUseCase.execute();
+  }	
 }
