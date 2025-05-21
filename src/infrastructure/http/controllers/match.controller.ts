@@ -1,13 +1,13 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { SaveMatchUseCase } from '@application/save-match.usecase';
-import { MatchDTO } from './dto/match.dto';
+import { CreateMatchUseCase } from '@application/use-cases/create-match.usecase';
+import { CreateMatchDto } from '@application/dto/create-match.dto';
 
 @Controller('match')
 export class MatchController {
-  constructor(private readonly saveMatchUseCase: SaveMatchUseCase) {}
+  constructor(private readonly createMatchUseCase: CreateMatchUseCase) {}
 
   @Post()
-  async saveMatch(@Body() match: MatchDTO) {
-    return this.saveMatchUseCase.execute(match);
+  async createMatch(@Body() createMatchDto: CreateMatchDto) {
+    return this.createMatchUseCase.execute(createMatchDto);
   }
 }

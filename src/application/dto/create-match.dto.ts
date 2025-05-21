@@ -3,19 +3,19 @@ import { IsArray, IsDateString, IsEnum, IsInt, Min, ArrayMinSize } from 'class-v
 export class CreateMatchDto {
   @IsArray()
   @ArrayMinSize(5)
-  teamAIds: string[];
+  teamAIds!: string[];
 
   @IsArray()
   @ArrayMinSize(5)
-  teamBIds: string[];
+  teamBIds!: string[];
 
   @IsEnum(['A', 'B', 'draw'])
-  winner: 'A' | 'B' | 'draw';
+  winner!: 'A' | 'B' | 'draw';
 
   @IsInt()
   @Min(0)
-  goalDifference: number;
+  goalDifference!: number;
 
   @IsDateString()
-  date: string;
+  date!: string;
 }

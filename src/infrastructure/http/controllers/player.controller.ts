@@ -6,7 +6,9 @@ import { Player } from '@domain/entities/player';
 
 @Controller('players')
 export class PlayerController {
-  constructor(private readonly createPlayerUseCase: CreatePlayerUseCase) {}
+  constructor(private readonly createPlayerUseCase: CreatePlayerUseCase,
+	      private readonly getAllPlayersUseCase: GetAllPlayersUseCase
+  ) {}
 
   @Post()
   async create(@Body() dto: CreatePlayerDto): Promise<Player> {

@@ -1,4 +1,3 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Match } from './match';
 import { Player } from './player';
 
@@ -23,16 +22,5 @@ export class MatchPlayer {
     eloAfter: number,
   ): MatchPlayer {
     return new MatchPlayer(matchId, playerId, match, player, team, eloBefore, eloAfter);
-  }
-  static fromPersistence(data: any): MatchPlayer {
-    return new MatchPlayer(
-      data.matchId,
-      data.playerId,
-      Match.fromPersistence(data.match),
-      Player.fromPersistence(data.player),
-      data.team,
-      data.eloBefore,
-      data.eloAfter,
-    );
   }
 }
