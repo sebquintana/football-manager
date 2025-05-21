@@ -1,17 +1,12 @@
+import { Team } from './team';
+
 export class Match {
   constructor(
-    public id: string,
-    public matchDate: string,
-    public goalDifference: number,
-    public teamWinner: string,
-    public createdAt: Date,
+    public readonly id: string,
+    public readonly date: Date,
+    public readonly teamA: Team,
+    public readonly teamB: Team,
+    public readonly winner: 'A' | 'B' | 'draw',
+    public readonly goalDifference: number,
   ) {}
-
-  static create(id: string, matchDate: string, goalDifference: number, teamWinner: string): Match {
-    return new Match(id, matchDate, goalDifference, teamWinner, new Date());
-  }
-
-  static fromPersistence(data: any): Match {
-    return new Match(data.id, data.matchDate, data.goalDifference, data.teamWinner, data.createdAt);
-  }
 }
