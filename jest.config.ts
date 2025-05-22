@@ -9,6 +9,7 @@ export default {
     '^@domain/(.*)$': '<rootDir>/src/domain/$1',
     '^@application/(.*)$': '<rootDir>/src/application/$1',
     '^@infrastructure/(.*)$': '<rootDir>/src/infrastructure/$1',
+    '^@utils/(.*)$': '<rootDir>/src/utils/$1',
   },
   collectCoverageFrom: ['src/**/*.(t|j)s', '!src/app.module.ts', '!src/**/*.persistence.ts'],
   coverageDirectory: 'coverage',

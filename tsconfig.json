@@ -10,6 +10,7 @@
       "@domain/*": ["src/domain/*"],
       "@application/*": ["src/application/*"],
       "@infrastructure/*": ["src/infrastructure/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "esModuleInterop": true,
     "strict": true,
