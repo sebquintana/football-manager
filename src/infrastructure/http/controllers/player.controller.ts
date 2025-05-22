@@ -3,11 +3,14 @@ import { CreatePlayerUseCase } from '@application/use-cases/create-player.usecas
 import { GetAllPlayersUseCase } from '@application/use-cases/get-all-players.usecase';
 import { CreatePlayerDto } from '@application/dto/create-player.dto';
 import { Player } from '@domain/entities/player';
+import { GetPlayersRankingUseCase } from '@application/use-cases/get-players-ranking.usecase';
 
 @Controller('players')
 export class PlayerController {
-  constructor(private readonly createPlayerUseCase: CreatePlayerUseCase,
-	      private readonly getAllPlayersUseCase: GetAllPlayersUseCase
+  constructor(
+    private readonly createPlayerUseCase: CreatePlayerUseCase,
+    private readonly getAllPlayersUseCase: GetAllPlayersUseCase,
+    private readonly getPlayersRanking: GetPlayersRankingUseCase,
   ) {}
 
   @Post()
@@ -18,5 +21,10 @@ export class PlayerController {
   @Get()
   async findAll(): Promise<Player[]> {
     return this.getAllPlayersUseCase.execute();
-  }	
+  }
+
+  @Get('ranking')
+  async getRanking() {
+    return this.getPlayersRanking.execute();
+  }
 }

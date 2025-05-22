@@ -11,12 +11,24 @@ export class MatchResultService {
     const draw = match.winner === 'draw';
 
     for (const player of match.teamA.players) {
-      const updated = MatchResultService.updatePlayer(player, teamAWon, teamBWon, draw, match.goalDifference);
+      const updated = MatchResultService.updatePlayer(
+        player,
+        teamAWon,
+        teamBWon,
+        draw,
+        match.goalDifference,
+      );
       updatedPlayers.push(updated);
     }
 
     for (const player of match.teamB.players) {
-      const updated = MatchResultService.updatePlayer(player, teamBWon, teamAWon, draw, match.goalDifference);
+      const updated = MatchResultService.updatePlayer(
+        player,
+        teamBWon,
+        teamAWon,
+        draw,
+        match.goalDifference,
+      );
       updatedPlayers.push(updated);
     }
 

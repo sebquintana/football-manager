@@ -10,6 +10,7 @@ export class GetAllPlayersUseCase {
   ) {}
 
   async execute(): Promise<Player[]> {
-    return this.playerRepository.findAll();
+    const players = await this.playerRepository.findAll();
+    return players.sort((a, b) => b.elo - a.elo);
   }
 }
