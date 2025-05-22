@@ -37,8 +37,8 @@ describe('CreateMatchUseCase', () => {
 
   it('should create and save a match with valid input', async () => {
     const dto: CreateMatchDto = {
-      teamAIds: ['1', '2', '3', '4', '5'],
-      teamBIds: ['6', '7', '8', '9', '10'],
+      teamANames: ['Santi', 'Goro', 'Axel', 'Luca', 'Nico'],
+      teamBNames: ['Nahue', 'Seba Q', 'Teo', 'Seba P', 'Naza'],
       winner: 'A',
       goalDifference: 2,
       date: new Date().toISOString(),

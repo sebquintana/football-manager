@@ -14,7 +14,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "start:local": "docker-compose up -d && npm run start",
-    "build:tsc": "tsc"
+    "build:tsc": "tsc",
+    "backup": "node scripts/backup.js",
+    "restore": "node scripts/restore.js"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

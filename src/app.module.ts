@@ -8,6 +8,9 @@ import { GetAllPlayersUseCase } from '@application/use-cases/get-all-players.use
 import { CreateMatchUseCase } from '@application/use-cases/create-match.usecase';
 import { GenerateBalancedTeamsUseCase } from '@application/use-cases/generate-balanced-teams.usecase';
 
+import { FilePlayerRepository } from '@infrastructure/adapters/persistence/files/player.repository.file'
+import { FileTeamRepository } from '@infrastructure/adapters/persistence/files/team.repository.file'
+import { FileMatchRepository } from '@infrastructure/adapters/persistence/files/match.repository.file'
 
 @Module({
   imports: [
@@ -17,7 +20,19 @@ import { GenerateBalancedTeamsUseCase } from '@application/use-cases/generate-ba
     CreatePlayerUseCase,
     GetAllPlayersUseCase,
     CreateMatchUseCase,
-    GenerateBalancedTeamsUseCase
+    GenerateBalancedTeamsUseCase,
+    {
+      provide: 'PlayerRepository',
+      useClass: FilePlayerRepository,
+    },
+    {
+      provide: 'MatchRepository',
+      useClass: FileMatchRepository,
+    },
+    {
+      provide: 'TeamRepository',
+      useClass: FileTeamRepository,
+    },
   ],
 })
 export class AppModule {}

@@ -21,8 +21,8 @@ export class CreateMatchUseCase {
     const allPlayers = await this.playerRepository.findAll();
 
     // TODO: Quiza se podrian crear en base al nombre de los jugadores y no el id.
-    const teamAPlayers = dto.teamAIds.map(id => this.findPlayer(id, allPlayers));
-    const teamBPlayers = dto.teamBIds.map(id => this.findPlayer(id, allPlayers));
+    const teamAPlayers = dto.teamANames.map((name: string) => this.findPlayer(name, allPlayers));
+    const teamBPlayers = dto.teamBNames.map((name: string) => this.findPlayer(name, allPlayers));
 
     const teamA = new Team(uuidv4(), teamAPlayers);
     const teamB = new Team(uuidv4(), teamBPlayers);
@@ -47,9 +47,9 @@ export class CreateMatchUseCase {
   }
 
   // TODO: Mover a un player.domain-service.ts
-  private findPlayer(id: string, allPlayers: Player[]): Player {
-    const player = allPlayers.find(p => p.id === id);
-    if (!player) throw new Error(`Player ${id} not found`);
+  private findPlayer(name: string, allPlayers: Player[]): Player {
+    const player = allPlayers.find((p: Player) => p.name.toLowerCase() === name.toLowerCase());
+    if (!player) throw new Error(`Player not found: ${name}`);
     return player;
   }
 }
