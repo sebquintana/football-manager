@@ -15,9 +15,9 @@ export class GenerateBalancedTeamsUseCase {
   async execute(dto: GenerateBalancedTeamsDto): Promise<BalancedTeamOptionDto[]> {
     const allPlayers = await this.playerRepository.findAll();
 
-    const selectedPlayers: Player[] = dto.playerIds.map(id => {
-      const player = allPlayers.find(p => p.id === id);
-      if (!player) throw new Error(`Player not found: ${id}`);
+    const selectedPlayers: Player[] = dto.playerNames.map((name: string) => {
+      const player = allPlayers.find((p: Player) => p.name.toLowerCase() === name.toLowerCase());
+      if (!player) throw new Error(`Player not found: ${name}`);
       return player;
     });
 

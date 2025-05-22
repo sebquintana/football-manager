@@ -1,83 +1,5 @@
 [
   {
-    "id": "ab166b41-e9cd-444c-89e7-502990299bac",
-    "name": "Enzo",
-    "elo": 1040,
-    "initialElo": 1040,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
-    "lossCount": 0,
-    "drawCount": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
-  },
-  {
-    "id": "d7586ed9-06da-42d3-909d-485f97fd7bc7",
-    "name": "Seba Q",
-    "elo": 1030,
-    "initialElo": 1030,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
-    "lossCount": 0,
-    "drawCount": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
-  },
-  {
-    "id": "66d46254-0aa4-437d-9aa0-00f429619b4b",
-    "name": "Rodri",
-    "elo": 1020,
-    "initialElo": 1020,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
-    "lossCount": 0,
-    "drawCount": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
-  },
-  {
-    "id": "5bb7e24b-204f-4c02-b7b1-252bcf5f3bc4",
-    "name": "Mati P",
-    "elo": 1020,
-    "initialElo": 1020,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
-    "lossCount": 0,
-    "drawCount": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
-  },
-  {
-    "id": "c95093e5-a751-4bfa-9d25-7d413ec0f008",
-    "name": "Santi",
-    "elo": 1010,
-    "initialElo": 1010,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
-    "lossCount": 0,
-    "drawCount": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
-  },
-  {
-    "id": "3c7a0995-8d48-43ab-af8f-7c9dc15d1c76",
-    "name": "Goro",
-    "elo": 1010,
-    "initialElo": 1010,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
-    "lossCount": 0,
-    "drawCount": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
-  },
-  {
     "id": "808e4ed2-1546-4b90-b7a7-36d9f8851902",
     "name": "Juanchi",
     "elo": 1010,
@@ -91,133 +13,477 @@
     "history": []
   },
   {
-    "id": "d9a96488-13e6-4547-b478-4842468f354d",
-    "name": "Seba F",
-    "elo": 1010,
-    "initialElo": 1010,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
+    "id": "ab166b41-e9cd-444c-89e7-502990299bac",
+    "name": "Enzo",
+    "elo": 1056,
+    "initialElo": 1040,
+    "totalMatchesPlayed": 1,
+    "winCount": 1,
     "lossCount": 0,
     "drawCount": 0,
-    "goalsFor": 0,
+    "goalsFor": 6,
     "goalsAgainst": 0,
-    "history": []
-  },
-  {
-    "id": "f00e70d9-a2cc-47de-b8be-dbbac15f4e86",
-    "name": "Luca",
-    "elo": 1000,
-    "initialElo": 1000,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
-    "lossCount": 0,
-    "drawCount": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
+    "history": [
+      {
+        "oldElo": 1040,
+        "newElo": 1056,
+        "changedAt": "2025-05-22T03:15:38.655Z"
+      }
+    ]
   },
   {
     "id": "7bcce8d7-4304-4a88-bda4-be17f3d36710",
     "name": "Colu",
-    "elo": 1000,
+    "elo": 1011,
     "initialElo": 1000,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
+    "totalMatchesPlayed": 1,
+    "winCount": 1,
     "lossCount": 0,
     "drawCount": 0,
-    "goalsFor": 0,
+    "goalsFor": 1,
     "goalsAgainst": 0,
-    "history": []
-  },
-  {
-    "id": "c751e48e-7166-4f4f-ab09-edcd5555db63",
-    "name": "Seba P",
-    "elo": 990,
-    "initialElo": 990,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
-    "lossCount": 0,
-    "drawCount": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
-  },
-  {
-    "id": "ab8abda7-b9b1-42a1-9b09-b283c484eaa8",
-    "name": "Naza",
-    "elo": 980,
-    "initialElo": 980,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
-    "lossCount": 0,
-    "drawCount": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
-  },
-  {
-    "id": "3260a362-9811-49c9-a5bf-3981f9e815bf",
-    "name": "Teo",
-    "elo": 980,
-    "initialElo": 980,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
-    "lossCount": 0,
-    "drawCount": 0,
-    "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
+    "history": [
+      {
+        "oldElo": 1000,
+        "newElo": 1011,
+        "changedAt": "2025-05-22T03:15:42.051Z"
+      }
+    ]
   },
   {
     "id": "b80ea204-25d1-4f6a-8fa8-21d4db7fb0c6",
     "name": "Kevin",
-    "elo": 980,
+    "elo": 969,
     "initialElo": 980,
-    "totalMatchesPlayed": 0,
+    "totalMatchesPlayed": 1,
     "winCount": 0,
-    "lossCount": 0,
+    "lossCount": 1,
     "drawCount": 0,
     "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
+    "goalsAgainst": 1,
+    "history": [
+      {
+        "oldElo": 980,
+        "newElo": 969,
+        "changedAt": "2025-05-22T03:15:42.051Z"
+      }
+    ]
   },
   {
-    "id": "2dd17867-abcb-4bd8-bf1e-122d1ce2854c",
-    "name": "Axel",
-    "elo": 970,
-    "initialElo": 970,
-    "totalMatchesPlayed": 0,
+    "id": "d9a96488-13e6-4547-b478-4842468f354d",
+    "name": "Seba F",
+    "elo": 997,
+    "initialElo": 1010,
+    "totalMatchesPlayed": 1,
     "winCount": 0,
-    "lossCount": 0,
+    "lossCount": 1,
     "drawCount": 0,
     "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
+    "goalsAgainst": 3,
+    "history": [
+      {
+        "oldElo": 1010,
+        "newElo": 997,
+        "changedAt": "2025-05-22T03:15:43.518Z"
+      }
+    ]
   },
   {
-    "id": "b32cbae0-0f9f-4b3e-bf03-8f45b4d7293d",
-    "name": "Nico",
-    "elo": 960,
-    "initialElo": 960,
-    "totalMatchesPlayed": 0,
+    "id": "66d46254-0aa4-437d-9aa0-00f429619b4b",
+    "name": "Rodri",
+    "elo": 1007,
+    "initialElo": 1020,
+    "totalMatchesPlayed": 1,
     "winCount": 0,
-    "lossCount": 0,
+    "lossCount": 1,
     "drawCount": 0,
     "goalsFor": 0,
-    "goalsAgainst": 0,
-    "history": []
+    "goalsAgainst": 3,
+    "history": [
+      {
+        "oldElo": 1020,
+        "newElo": 1007,
+        "changedAt": "2025-05-22T03:15:43.518Z"
+      }
+    ]
+  },
+  {
+    "id": "5bb7e24b-204f-4c02-b7b1-252bcf5f3bc4",
+    "name": "Mati P",
+    "elo": 1006,
+    "initialElo": 1020,
+    "totalMatchesPlayed": 3,
+    "winCount": 1,
+    "lossCount": 2,
+    "drawCount": 0,
+    "goalsFor": 3,
+    "goalsAgainst": 7,
+    "history": [
+      {
+        "oldElo": 1020,
+        "newElo": 1004,
+        "changedAt": "2025-05-22T03:15:38.655Z"
+      },
+      {
+        "oldElo": 1004,
+        "newElo": 993,
+        "changedAt": "2025-05-22T03:15:42.051Z"
+      },
+      {
+        "oldElo": 993,
+        "newElo": 1006,
+        "changedAt": "2025-05-22T03:15:43.518Z"
+      }
+    ]
+  },
+  {
+    "id": "d7586ed9-06da-42d3-909d-485f97fd7bc7",
+    "name": "Seba Q",
+    "elo": 988,
+    "initialElo": 1030,
+    "totalMatchesPlayed": 5,
+    "winCount": 1,
+    "lossCount": 4,
+    "drawCount": 0,
+    "goalsFor": 1,
+    "goalsAgainst": 13,
+    "history": [
+      {
+        "oldElo": 1030,
+        "newElo": 1014,
+        "changedAt": "2025-05-22T03:15:38.655Z"
+      },
+      {
+        "oldElo": 1014,
+        "newElo": 1025,
+        "changedAt": "2025-05-22T03:15:42.051Z"
+      },
+      {
+        "oldElo": 1025,
+        "newElo": 1012,
+        "changedAt": "2025-05-22T03:15:43.518Z"
+      },
+      {
+        "oldElo": 1012,
+        "newElo": 1000,
+        "changedAt": "2025-05-22T03:15:45.705Z"
+      },
+      {
+        "oldElo": 1000,
+        "newElo": 988,
+        "changedAt": "2025-05-22T03:15:55.579Z"
+      }
+    ]
+  },
+  {
+    "id": "3260a362-9811-49c9-a5bf-3981f9e815bf",
+    "name": "Teo",
+    "elo": 956,
+    "initialElo": 980,
+    "totalMatchesPlayed": 2,
+    "winCount": 0,
+    "lossCount": 2,
+    "drawCount": 0,
+    "goalsFor": 0,
+    "goalsAgainst": 4,
+    "history": [
+      {
+        "oldElo": 980,
+        "newElo": 968,
+        "changedAt": "2025-05-22T03:15:45.705Z"
+      },
+      {
+        "oldElo": 968,
+        "newElo": 956,
+        "changedAt": "2025-05-22T03:15:55.579Z"
+      }
+    ]
   },
   {
     "id": "525ada9a-e57d-44ad-b463-e389b707675d",
     "name": "Nahue",
-    "elo": 960,
+    "elo": 918,
     "initialElo": 960,
-    "totalMatchesPlayed": 0,
-    "winCount": 0,
+    "totalMatchesPlayed": 5,
+    "winCount": 1,
+    "lossCount": 4,
+    "drawCount": 0,
+    "goalsFor": 1,
+    "goalsAgainst": 13,
+    "history": [
+      {
+        "oldElo": 960,
+        "newElo": 944,
+        "changedAt": "2025-05-22T03:15:38.655Z"
+      },
+      {
+        "oldElo": 944,
+        "newElo": 955,
+        "changedAt": "2025-05-22T03:15:42.051Z"
+      },
+      {
+        "oldElo": 955,
+        "newElo": 942,
+        "changedAt": "2025-05-22T03:15:43.518Z"
+      },
+      {
+        "oldElo": 942,
+        "newElo": 930,
+        "changedAt": "2025-05-22T03:15:45.705Z"
+      },
+      {
+        "oldElo": 930,
+        "newElo": 918,
+        "changedAt": "2025-05-22T03:15:55.579Z"
+      }
+    ]
+  },
+  {
+    "id": "f00e70d9-a2cc-47de-b8be-dbbac15f4e86",
+    "name": "Luca",
+    "elo": 1003,
+    "initialElo": 1000,
+    "totalMatchesPlayed": 4,
+    "winCount": 2,
+    "lossCount": 2,
+    "drawCount": 0,
+    "goalsFor": 7,
+    "goalsAgainst": 4,
+    "history": [
+      {
+        "oldElo": 1000,
+        "newElo": 1016,
+        "changedAt": "2025-05-22T03:15:38.655Z"
+      },
+      {
+        "oldElo": 1016,
+        "newElo": 1027,
+        "changedAt": "2025-05-22T03:15:42.051Z"
+      },
+      {
+        "oldElo": 1027,
+        "newElo": 1015,
+        "changedAt": "2025-05-22T03:15:45.705Z"
+      },
+      {
+        "oldElo": 1015,
+        "newElo": 1003,
+        "changedAt": "2025-05-22T03:15:55.579Z"
+      }
+    ]
+  },
+  {
+    "id": "c751e48e-7166-4f4f-ab09-edcd5555db63",
+    "name": "Seba P",
+    "elo": 982,
+    "initialElo": 990,
+    "totalMatchesPlayed": 3,
+    "winCount": 1,
+    "lossCount": 2,
+    "drawCount": 0,
+    "goalsFor": 6,
+    "goalsAgainst": 4,
+    "history": [
+      {
+        "oldElo": 990,
+        "newElo": 1006,
+        "changedAt": "2025-05-22T03:15:38.655Z"
+      },
+      {
+        "oldElo": 1006,
+        "newElo": 994,
+        "changedAt": "2025-05-22T03:15:45.705Z"
+      },
+      {
+        "oldElo": 994,
+        "newElo": 982,
+        "changedAt": "2025-05-22T03:15:55.579Z"
+      }
+    ]
+  },
+  {
+    "id": "ab8abda7-b9b1-42a1-9b09-b283c484eaa8",
+    "name": "Naza",
+    "elo": 1012,
+    "initialElo": 980,
+    "totalMatchesPlayed": 5,
+    "winCount": 4,
+    "lossCount": 1,
+    "drawCount": 0,
+    "goalsFor": 8,
+    "goalsAgainst": 6,
+    "history": [
+      {
+        "oldElo": 980,
+        "newElo": 964,
+        "changedAt": "2025-05-22T03:15:38.655Z"
+      },
+      {
+        "oldElo": 964,
+        "newElo": 975,
+        "changedAt": "2025-05-22T03:15:42.051Z"
+      },
+      {
+        "oldElo": 975,
+        "newElo": 988,
+        "changedAt": "2025-05-22T03:15:43.518Z"
+      },
+      {
+        "oldElo": 988,
+        "newElo": 1000,
+        "changedAt": "2025-05-22T03:15:45.705Z"
+      },
+      {
+        "oldElo": 1000,
+        "newElo": 1012,
+        "changedAt": "2025-05-22T03:15:55.579Z"
+      }
+    ]
+  },
+  {
+    "id": "2dd17867-abcb-4bd8-bf1e-122d1ce2854c",
+    "name": "Axel",
+    "elo": 954,
+    "initialElo": 970,
+    "totalMatchesPlayed": 5,
+    "winCount": 2,
+    "lossCount": 3,
+    "drawCount": 0,
+    "goalsFor": 4,
+    "goalsAgainst": 10,
+    "history": [
+      {
+        "oldElo": 970,
+        "newElo": 954,
+        "changedAt": "2025-05-22T03:15:38.655Z"
+      },
+      {
+        "oldElo": 954,
+        "newElo": 943,
+        "changedAt": "2025-05-22T03:15:42.051Z"
+      },
+      {
+        "oldElo": 943,
+        "newElo": 930,
+        "changedAt": "2025-05-22T03:15:43.518Z"
+      },
+      {
+        "oldElo": 930,
+        "newElo": 942,
+        "changedAt": "2025-05-22T03:15:45.705Z"
+      },
+      {
+        "oldElo": 942,
+        "newElo": 954,
+        "changedAt": "2025-05-22T03:15:55.579Z"
+      }
+    ]
+  },
+  {
+    "id": "b32cbae0-0f9f-4b3e-bf03-8f45b4d7293d",
+    "name": "Nico",
+    "elo": 1002,
+    "initialElo": 960,
+    "totalMatchesPlayed": 5,
+    "winCount": 4,
+    "lossCount": 1,
+    "drawCount": 0,
+    "goalsFor": 13,
+    "goalsAgainst": 1,
+    "history": [
+      {
+        "oldElo": 960,
+        "newElo": 976,
+        "changedAt": "2025-05-22T03:15:38.655Z"
+      },
+      {
+        "oldElo": 976,
+        "newElo": 965,
+        "changedAt": "2025-05-22T03:15:42.051Z"
+      },
+      {
+        "oldElo": 965,
+        "newElo": 978,
+        "changedAt": "2025-05-22T03:15:43.518Z"
+      },
+      {
+        "oldElo": 978,
+        "newElo": 990,
+        "changedAt": "2025-05-22T03:15:45.705Z"
+      },
+      {
+        "oldElo": 990,
+        "newElo": 1002,
+        "changedAt": "2025-05-22T03:15:55.579Z"
+      }
+    ]
+  },
+  {
+    "id": "c95093e5-a751-4bfa-9d25-7d413ec0f008",
+    "name": "Santi",
+    "elo": 1052,
+    "initialElo": 1010,
+    "totalMatchesPlayed": 5,
+    "winCount": 4,
+    "lossCount": 1,
+    "drawCount": 0,
+    "goalsFor": 13,
+    "goalsAgainst": 1,
+    "history": [
+      {
+        "oldElo": 1010,
+        "newElo": 1026,
+        "changedAt": "2025-05-22T03:15:38.655Z"
+      },
+      {
+        "oldElo": 1026,
+        "newElo": 1015,
+        "changedAt": "2025-05-22T03:15:42.051Z"
+      },
+      {
+        "oldElo": 1015,
+        "newElo": 1028,
+        "changedAt": "2025-05-22T03:15:43.518Z"
+      },
+      {
+        "oldElo": 1028,
+        "newElo": 1040,
+        "changedAt": "2025-05-22T03:15:45.705Z"
+      },
+      {
+        "oldElo": 1040,
+        "newElo": 1052,
+        "changedAt": "2025-05-22T03:15:55.579Z"
+      }
+    ]
+  },
+  {
+    "id": "3c7a0995-8d48-43ab-af8f-7c9dc15d1c76",
+    "name": "Goro",
+    "elo": 1047,
+    "initialElo": 1010,
+    "totalMatchesPlayed": 3,
+    "winCount": 3,
     "lossCount": 0,
     "drawCount": 0,
-    "goalsFor": 0,
+    "goalsFor": 7,
     "goalsAgainst": 0,
-    "history": []
+    "history": [
+      {
+        "oldElo": 1010,
+        "newElo": 1023,
+        "changedAt": "2025-05-22T03:15:43.518Z"
+      },
+      {
+        "oldElo": 1023,
+        "newElo": 1035,
+        "changedAt": "2025-05-22T03:15:45.705Z"
+      },
+      {
+        "oldElo": 1035,
+        "newElo": 1047,
+        "changedAt": "2025-05-22T03:15:55.579Z"
+      }
+    ]
   }
 ]

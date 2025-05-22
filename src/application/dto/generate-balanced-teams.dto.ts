@@ -5,5 +5,5 @@ export class GenerateBalancedTeamsDto {
   @ArrayMinSize(10)
   @ArrayMaxSize(10)
   @IsUUID('all', { each: true })
-  playerIds!: string[];
+  playerNames!: string[];
 }

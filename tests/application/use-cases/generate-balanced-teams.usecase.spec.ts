@@ -34,7 +34,7 @@ describe('GenerateBalancedTeamsUseCase', () => {
 
   it('should return balanced team options with correct structure', async () => {
     const dto: GenerateBalancedTeamsDto = {
-      playerIds: mockPlayers.map(p => p.id),
+      playerNames: mockPlayers.map(p => p.name),
     };
 
     const result = await useCase.execute(dto);
