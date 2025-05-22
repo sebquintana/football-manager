@@ -1,0 +1,10 @@
+### 🔹 Generar equipos balanceados
+POST http://localhost:3000/teams/balanced
+Content-Type: application/json
+
+{
+  "playerNames": [
+    "Axel", "Seba Q", "Seba F", "Rodri", "Luca",
+    "Nico", "Nahue", "Naza", "Santi", "Mati P"
+  ]
+}

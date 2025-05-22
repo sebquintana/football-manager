@@ -1,0 +1,4 @@
+### 🔹 Obtener todos los jugadores
+GET http://localhost:3000/players
+
+###

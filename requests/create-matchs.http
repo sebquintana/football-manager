@@ -1,0 +1,53 @@
+### Partido 1
+POST http://localhost:3000/match
+Content-Type: application/json
+
+{
+  "teamANames": ["Nico", "Luca", "Santi", "Enzo", "Seba P"],
+  "teamBNames": ["Naza", "Seba Q", "Axel", "Mati P", "Nahue"],
+  "winner": "A",
+  "goalDifference": 6,
+  "date": "2025-04-24T00:00:00"
+}
+
+###
+
+### Partido 2
+POST http://localhost:3000/match
+Content-Type: application/json
+
+{
+  "teamANames": ["Naza", "Seba Q", "Nahue", "Luca", "Colu"],
+  "teamBNames": ["Axel", "Mati P", "Nico", "Santi", "Kevin"],
+  "winner": "A",
+  "goalDifference": 1,
+  "date": "2025-05-01T00:00:00"
+}
+
+###
+
+### Partido 3
+POST http://localhost:3000/match
+Content-Type: application/json
+
+{
+  "teamANames": ["Seba Q", "Axel", "Nahue", "Seba F", "Rodri"],
+  "teamBNames": ["Naza", "Mati P", "Nico", "Santi", "Goro"],
+  "winner": "B",
+  "goalDifference": 3,
+  "date": "2025-05-08T00:00:00"
+}
+
+###
+
+### Partido 4
+POST http://localhost:3000/match
+Content-Type: application/json
+
+{
+  "teamANames": ["Seba Q", "Teo", "Nahue", "Luca", "Seba P"],
+  "teamBNames": ["Naza", "Axel", "Nico", "Santi", "Goro"],
+  "winner": "B",
+  "goalDifference": 2,
+  "date": "2025-05-15T00:00:00"
+}

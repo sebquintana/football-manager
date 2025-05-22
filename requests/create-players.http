@@ -1,0 +1,169 @@
+### Crear jugadores en lote (puede ejecutarse uno por uno o copiar en Postman)
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Enzo",
+  "initialElo": 1040
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Seba Q",
+  "initialElo": 1030
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Rodri",
+  "initialElo": 1020
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Mati P",
+  "initialElo": 1020
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Santi",
+  "initialElo": 1010
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Goro",
+  "initialElo": 1010
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Juanchi",
+  "initialElo": 1010
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Seba F",
+  "initialElo": 1010
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Luca",
+  "initialElo": 1000
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Colu",
+  "initialElo": 1000
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Seba P",
+  "initialElo": 990
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Naza",
+  "initialElo": 980
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Teo",
+  "initialElo": 980
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Kevin",
+  "initialElo": 980
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Axel",
+  "initialElo": 970
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Nico",
+  "initialElo": 960
+}
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Nahue",
+  "initialElo": 960
+}
