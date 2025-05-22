@@ -10,7 +10,7 @@ if (!fs.existsSync(backupDir)) {
 }
 
 files.forEach(file => {
-  const src = path.resolve(__dirname, `../src/infrastructure/adapters/persistence/files/${file}`);
+  const src = path.resolve(__dirname, `../data/${file}`);
   const dest = path.join(backupDir, `${file.replace('.json', '')}_${timestamp}.json`);
   fs.copyFileSync(src, dest);
   console.log(`Backed up ${file} to ${dest}`);

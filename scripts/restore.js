@@ -10,7 +10,7 @@ if (!backupName) {
 }
 
 const types = ['player', 'match', 'team'];
-const filesDir = path.resolve(__dirname, '../src/infrastructure/adapters/persistence/files');
+const filesDir = path.resolve(__dirname, '../data');
 
 types.forEach(type => {
   const backupFile = path.resolve(__dirname, `../backups/${type}-db_${backupName}.json`);
