@@ -167,3 +167,11 @@ Content-Type: application/json
   "name": "Nahue",
   "initialElo": 960
 }
+###
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Tincho",
+  "initialElo": 1000
+}
