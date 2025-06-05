@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "playerNames": [
-    "Axel", "Seba Q", "Seba F", "Goro", "Luca",
-    "Nico", "Nahue", "Naza", "Santi", "Mati P"
+    "Axel", "Seba Q", "Seba F", "Luca", "Rodri",
+    "Nico", "Nahue", "Naza", "Santi", "Juanchi"
   ]
 }
