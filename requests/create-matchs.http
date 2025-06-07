@@ -63,7 +63,7 @@ Content-Type: application/json
   "teamBNames": ["Luca", "Axel", "Tincho", "Mati P", "Nico"],
   "winner": "A",
   "goalDifference": 4,
-  "date": "2025-05-15T00:00:00"
+  "date": "2025-05-22:00:00"
 }
 ###
 
@@ -77,4 +77,16 @@ Content-Type: application/json
   "winner": "A",
   "goalDifference": 2,
   "date": "2025-05-29T00:00:00"
+}
+
+### Partido 7
+POST http://localhost:3000/match
+Content-Type: application/json
+
+{
+  "teamANames": ["Seba Q", "Seba F", "Nahue", "Naza", "Santi"],
+  "teamBNames": ["Luca", "Axel", "Nico", "Juanchi", "Rodri"],
+  "winner": "A",
+  "goalDifference": 5,
+  "date": "2025-06-05T00:00:00"
 }

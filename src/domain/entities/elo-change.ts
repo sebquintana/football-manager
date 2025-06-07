@@ -3,5 +3,6 @@ export class EloChange {
     public readonly oldElo: number,
     public readonly newElo: number,
     public readonly changedAt: Date = new Date(),
+    public readonly matchId?: string,
   ) {}
 }

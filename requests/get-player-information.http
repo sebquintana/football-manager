@@ -1,0 +1,2 @@
+### 🔹 Obtener información de un jugador
+GET http://localhost:3000/players/Santi

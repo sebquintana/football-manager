@@ -5,7 +5,6 @@ import { EloChange } from '../entities/elo-change';
 export class MatchResultService {
   static processMatch(match: Match): Player[] {
     const updatedPlayers: Player[] = [];
-
     const teamAWon = match.winner === 'A';
     const teamBWon = match.winner === 'B';
     const draw = match.winner === 'draw';
@@ -17,6 +16,7 @@ export class MatchResultService {
         teamBWon,
         draw,
         match.goalDifference,
+        match.id, // <-- nuevo argumento
       );
       updatedPlayers.push(updated);
     }
@@ -28,6 +28,7 @@ export class MatchResultService {
         teamAWon,
         draw,
         match.goalDifference,
+        match.id, // <-- nuevo argumento
       );
       updatedPlayers.push(updated);
     }
@@ -41,6 +42,7 @@ export class MatchResultService {
     lost: boolean,
     draw: boolean,
     goalDiff: number,
+    matchId?: string, // <-- nuevo argumento
   ): Player {
     let newElo = player.elo;
     const POINTS_PER_GAME = 10;
@@ -63,7 +65,7 @@ export class MatchResultService {
       drawCount,
       player.goalsFor + (won ? goalDiff : 0),
       player.goalsAgainst + (lost ? goalDiff : 0),
-      [...player.history, new EloChange(player.elo, newElo)],
+      [...player.history, new EloChange(player.elo, newElo, new Date(), matchId)],
     );
   }
 }
