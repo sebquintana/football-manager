@@ -3,4 +3,6 @@ export interface MatchSummaryDto {
   date: Date;
   winner: 'A' | 'B' | 'draw';
   goalDifference: number;
+  teamAPlayers: string[];
+  teamBPlayers: string[];
 }

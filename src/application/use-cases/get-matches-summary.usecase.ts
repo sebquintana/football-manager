@@ -7,6 +7,8 @@ export interface MatchSummaryDto {
   date: Date;
   winner: 'A' | 'B' | 'draw';
   goalDifference: number;
+  teamAPlayers: string[];
+  teamBPlayers: string[];
 }
 
 @Injectable()
@@ -23,6 +25,8 @@ export class GetMatchesSummaryUseCase {
       date: match.date,
       winner: match.winner,
       goalDifference: match.goalDifference,
+      teamAPlayers: match.teamA.players.map((p) => p.name),
+      teamBPlayers: match.teamB.players.map((p) => p.name),
     }));
   }
 }

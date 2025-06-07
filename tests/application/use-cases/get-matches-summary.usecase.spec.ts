@@ -88,18 +88,24 @@ describe('GetMatchesSummaryUseCase', () => {
       date: new Date('2024-01-01'),
       winner: 'A',
       goalDifference: 2,
+      teamAPlayers: ['Axel', 'Test1', 'Test2', 'Test3', 'Test4'],
+      teamBPlayers: ['Nico', 'Test5', 'Test6', 'Test7', 'Test8'],
     });
     expect(result[1]).toEqual({
       id: '2',
       date: new Date('2024-01-02'),
       winner: 'B',
       goalDifference: 1,
+      teamAPlayers: ['Seba', 'Test9', 'Test10', 'Test11', 'Test12'],
+      teamBPlayers: ['Luca', 'Test13', 'Test14', 'Test15', 'Test16'],
     });
     expect(result[2]).toEqual({
       id: '3',
       date: new Date('2024-01-03'),
       winner: 'draw',
       goalDifference: 0,
+      teamAPlayers: ['Rodri', 'Test17', 'Test18', 'Test19', 'Test20'],
+      teamBPlayers: ['Juanchi', 'Test21', 'Test22', 'Test23', 'Test24'],
     });
   });
 
