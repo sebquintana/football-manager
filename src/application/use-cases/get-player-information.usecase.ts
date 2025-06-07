@@ -21,6 +21,16 @@ export interface PlayerInformationDto {
     teamAPlayers?: string[];
     teamBPlayers?: string[];
   }>;
+  synergies: {
+    bestMate: string | null;
+    worstMate: string | null;
+    mates: Array<{
+      mate: string;
+      victories: number;
+      matches: number;
+      winRate: number;
+    }>;
+  };
 }
 
 @Injectable()
@@ -67,6 +77,42 @@ export class GetPlayerInformationUseCase {
       };
     });
 
+    // --- Calcular sinergias ---
+    // Map: compañeroId -> { nombre, victorias, partidos }
+    const synergyMap: Record<string, { mate: string; victories: number; matches: number }> = {};
+    for (const match of playerMatches) {
+      // Determinar en qué equipo jugó el jugador
+      let myTeamPlayers, won;
+      if (match.teamA.players.some((p: any) => p.id === player.id)) {
+        myTeamPlayers = match.teamA.players;
+        won = match.winner === 'A';
+      } else {
+        myTeamPlayers = match.teamB.players;
+        won = match.winner === 'B';
+      }
+      for (const mate of myTeamPlayers) {
+        if (mate.id === player.id) continue;
+        if (!synergyMap[mate.id]) {
+          synergyMap[mate.id] = { mate: mate.name, victories: 0, matches: 0 };
+        }
+        synergyMap[mate.id].matches++;
+        if (won) synergyMap[mate.id].victories++;
+      }
+    }
+    const matesArr = Object.values(synergyMap).map((s) => ({
+      ...s,
+      winRate: s.matches > 0 ? Math.round((s.victories / s.matches) * 100) : 0,
+    }));
+    // Mejor compañero: mayor winRate, en empate el de más partidos
+    let bestMate = null;
+    let worstMate = null;
+    if (matesArr.length > 0) {
+      matesArr.sort((a, b) => b.winRate - a.winRate || b.matches - a.matches);
+      bestMate = matesArr[0].mate;
+      matesArr.sort((a, b) => a.winRate - b.winRate || b.matches - a.matches);
+      worstMate = matesArr[0].mate;
+    }
+
     return {
       id: player.id,
       name: player.name,
@@ -79,6 +125,11 @@ export class GetPlayerInformationUseCase {
       goalsFor: player.goalsFor,
       goalsAgainst: player.goalsAgainst,
       history: historyWithTeams,
+      synergies: {
+        bestMate,
+        worstMate,
+        mates: matesArr,
+      },
     };
   }
 }
