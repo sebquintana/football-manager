@@ -62,7 +62,7 @@ Content-Type: application/json
   "teamANames": ["Seba Q", "Rodri", "Nahue", "Santi", "Naza"],
   "teamBNames": ["Luca", "Axel", "Tincho", "Mati P", "Nico"],
   "winner": "A",
-  "goalDifference": 4,
+  "goalDifference": 5,
   "date": "2025-05-22:00:00"
 }
 ###
