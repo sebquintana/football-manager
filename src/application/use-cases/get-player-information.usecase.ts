@@ -103,14 +103,19 @@ export class GetPlayerInformationUseCase {
       ...s,
       winRate: s.matches > 0 ? Math.round((s.victories / s.matches) * 100) : 0,
     }));
+
+    // Filtramos compañeros con los que jugó al menos el 25% de sus partidos
+    const minimumMatchesRequired = Math.ceil(player.totalMatchesPlayed * 0.25);
+    const significantMates = matesArr.filter((mate) => mate.matches >= minimumMatchesRequired);
+
     // Mejor compañero: mayor winRate, en empate el de más partidos
     let bestMate = null;
     let worstMate = null;
-    if (matesArr.length > 0) {
-      matesArr.sort((a, b) => b.winRate - a.winRate || b.matches - a.matches);
-      bestMate = matesArr[0].mate;
-      matesArr.sort((a, b) => a.winRate - b.winRate || b.matches - a.matches);
-      worstMate = matesArr[0].mate;
+    if (significantMates.length > 0) {
+      significantMates.sort((a, b) => b.winRate - a.winRate || b.matches - a.matches);
+      bestMate = significantMates[0].mate;
+      significantMates.sort((a, b) => a.winRate - b.winRate || b.matches - a.matches);
+      worstMate = significantMates[0].mate;
     }
 
     return {

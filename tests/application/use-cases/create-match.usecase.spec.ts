@@ -1,8 +1,8 @@
-import { CreateMatchUseCase } from '@application/use-cases/create-match.usecase';
-import { PlayerRepository } from '@domain/ports/player.repository';
-import { MatchRepository } from '@domain/ports/match.repository';
-import { CreateMatchDto } from '@application/dto/create-match.dto';
-import { Player } from '@domain/entities/player';
+import { CreateMatchUseCase } from '../../../src/application/use-cases/create-match.usecase';
+import { PlayerRepository } from '../../../src/domain/ports/player.repository';
+import { MatchRepository } from '../../../src/domain/ports/match.repository';
+import { CreateMatchDto } from '../../../src/application/dto/create-match.dto';
+import { Player } from '../../../src/domain/entities/player';
 
 describe('CreateMatchUseCase', () => {
   let useCase: CreateMatchUseCase;
@@ -30,7 +30,8 @@ describe('CreateMatchUseCase', () => {
 
     mockMatchRepo = {
       save: jest.fn().mockImplementation(async (match) => match),
-    };
+      findAll: jest.fn().mockResolvedValue([]),
+    } as any;
 
     useCase = new CreateMatchUseCase(mockPlayerRepo, mockMatchRepo);
   });
@@ -52,5 +53,14 @@ describe('CreateMatchUseCase', () => {
     expect(result.goalDifference).toBe(2);
     expect(mockPlayerRepo.findAll).toHaveBeenCalled();
     expect(mockMatchRepo.save).toHaveBeenCalledWith(expect.anything());
+    // Verifica que el resultado tenga el campo matchId en el history de los jugadores del partido
+    const allPlayersInMatch = [...result.teamA.players, ...result.teamB.players];
+    for (const player of allPlayersInMatch) {
+      if (player.history.length > 0) {
+        for (const h of player.history) {
+          expect(h).toHaveProperty('matchId');
+        }
+      }
+    }
   });
 });
