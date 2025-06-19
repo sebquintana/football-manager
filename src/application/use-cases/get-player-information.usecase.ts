@@ -31,6 +31,13 @@ export interface PlayerInformationDto {
       winRate: number;
     }>;
   };
+  streaks: {
+    currentType: 'win' | 'loss' | 'draw' | null;
+    currentCount: number;
+    maxWinStreak: number;
+    maxLossStreak: number;
+  };
+  attendanceRate: number;
 }
 
 @Injectable()
@@ -118,6 +125,58 @@ export class GetPlayerInformationUseCase {
       worstMate = significantMates[0].mate;
     }
 
+    // --- Calcular rachas ---
+    // Ordenar partidos por fecha ascendente
+    const sortedMatches = playerMatches
+      .slice()
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    let currentType: 'win' | 'loss' | 'draw' | null = null;
+    let currentCount = 0;
+    let maxWinStreak = 0;
+    let maxLossStreak = 0;
+    let tempWinStreak = 0;
+    let tempLossStreak = 0;
+    for (const match of sortedMatches) {
+      let won = false,
+        lost = false;
+      if (match.teamA.players.some((p: any) => p.id === player.id)) {
+        won = match.winner === 'A';
+        lost = match.winner === 'B';
+      } else {
+        won = match.winner === 'B';
+        lost = match.winner === 'A';
+      }
+      let resultType: 'win' | 'loss' | 'draw';
+      if (won) resultType = 'win';
+      else if (lost) resultType = 'loss';
+      else resultType = 'draw';
+      // Racha actual
+      if (currentType === null || currentType !== resultType) {
+        currentType = resultType;
+        currentCount = 1;
+      } else {
+        currentCount++;
+      }
+      // Racha máxima de victorias
+      if (resultType === 'win') {
+        tempWinStreak++;
+        maxWinStreak = Math.max(maxWinStreak, tempWinStreak);
+        tempLossStreak = 0;
+      } else if (resultType === 'loss') {
+        tempLossStreak++;
+        maxLossStreak = Math.max(maxLossStreak, tempLossStreak);
+        tempWinStreak = 0;
+      } else {
+        tempWinStreak = 0;
+        tempLossStreak = 0;
+      }
+    }
+
+    // Calcular % de asistencia
+    const totalMatches = matches.length;
+    const attendanceRate =
+      totalMatches > 0 ? Math.round((player.totalMatchesPlayed / totalMatches) * 100) : 0;
+
     return {
       id: player.id,
       name: player.name,
@@ -135,6 +194,13 @@ export class GetPlayerInformationUseCase {
         worstMate,
         mates: matesArr,
       },
+      streaks: {
+        currentType,
+        currentCount,
+        maxWinStreak,
+        maxLossStreak,
+      },
+      attendanceRate,
     };
   }
 }
