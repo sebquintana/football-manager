@@ -26,11 +26,17 @@ export class GenerateBalancedTeamsUseCase {
     const seenCombinations = new Set<string>();
     for (const teamA of allTeams) {
       // Restricción: Nico y Nahue no pueden estar en el mismo equipo
-      const teamANames = teamA.map((p: Player) => p.name.toLowerCase()).sort((a, b) => a.localeCompare(b));
+      const teamANames = teamA
+        .map((p: Player) => p.name.toLowerCase())
+        .sort((a, b) => a.localeCompare(b));
       const teamB = selectedPlayers.filter((p) => !teamA.includes(p));
-      const teamBNames = teamB.map((p: Player) => p.name.toLowerCase()).sort((a, b) => a.localeCompare(b));
-      if ((teamANames.includes('nico') && teamANames.includes('nahue')) ||
-          (teamBNames.includes('nico') && teamBNames.includes('nahue'))) {
+      const teamBNames = teamB
+        .map((p: Player) => p.name.toLowerCase())
+        .sort((a, b) => a.localeCompare(b));
+      if (
+        (teamANames.includes('nico') && teamANames.includes('nahue')) ||
+        (teamBNames.includes('nico') && teamBNames.includes('nahue'))
+      ) {
         continue; // Salta esta combinación si Nico y Nahue están juntos en cualquier equipo
       }
       // Filtrar combinaciones duplicadas (A/B y B/A)
@@ -51,6 +57,6 @@ export class GenerateBalancedTeamsUseCase {
       });
     }
 
-    return results.sort((a, b) => a.difference - b.difference).slice(0, 5); // top 5
+    return results.sort((a, b) => a.difference - b.difference).slice(0, 10); // top 10
   }
 }
