@@ -13,6 +13,7 @@ export interface PlayerInformationDto {
   drawCount: number;
   goalsFor: number;
   goalsAgainst: number;
+  winRate: number;
   history: Array<{
     oldElo: number;
     newElo: number;
@@ -185,6 +186,11 @@ export class GetPlayerInformationUseCase {
     const attendanceRate =
       totalMatches > 0 ? Math.round((player.totalMatchesPlayed / totalMatches) * 100) : 0;
 
+    // Calcular winrate (empates cuentan como medio punto)
+    const equivalentWins = player.winCount + (player.drawCount * 0.5);
+    const winRate = player.totalMatchesPlayed > 0 ? 
+      Math.round((equivalentWins / player.totalMatchesPlayed) * 100) : 0;
+
     return {
       id: player.id,
       name: player.name,
@@ -196,6 +202,7 @@ export class GetPlayerInformationUseCase {
       drawCount: player.drawCount,
       goalsFor: player.goalsFor,
       goalsAgainst: player.goalsAgainst,
+      winRate,
       history: historyWithTeams,
       synergies: {
         bestMate,
