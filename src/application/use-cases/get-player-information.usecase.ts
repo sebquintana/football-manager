@@ -27,6 +27,8 @@ export interface PlayerInformationDto {
     mates: Array<{
       mate: string;
       victories: number;
+      draws: number;
+      losses: number;
       matches: number;
       winRate: number;
     }>;
@@ -85,25 +87,31 @@ export class GetPlayerInformationUseCase {
     });
 
     // --- Calcular sinergias ---
-    // Map: compañeroId -> { nombre, victorias, partidos }
-    const synergyMap: Record<string, { mate: string; victories: number; matches: number }> = {};
+    // Map: compañeroId -> { nombre, victorias, empates, derrotas, partidos }
+    const synergyMap: Record<string, { mate: string; victories: number; draws: number; losses: number; matches: number }> = {};
     for (const match of playerMatches) {
       // Determinar en qué equipo jugó el jugador
-      let myTeamPlayers, won;
+      let myTeamPlayers, won, lost;
       if (match.teamA.players.some((p: any) => p.id === player.id)) {
         myTeamPlayers = match.teamA.players;
         won = match.winner === 'A';
+        lost = match.winner === 'B';
       } else {
         myTeamPlayers = match.teamB.players;
         won = match.winner === 'B';
+        lost = match.winner === 'A';
       }
+      const draw = match.winner === 'draw';
+      
       for (const mate of myTeamPlayers) {
         if (mate.id === player.id) continue;
         if (!synergyMap[mate.id]) {
-          synergyMap[mate.id] = { mate: mate.name, victories: 0, matches: 0 };
+          synergyMap[mate.id] = { mate: mate.name, victories: 0, draws: 0, losses: 0, matches: 0 };
         }
         synergyMap[mate.id].matches++;
         if (won) synergyMap[mate.id].victories++;
+        else if (lost) synergyMap[mate.id].losses++;
+        else if (draw) synergyMap[mate.id].draws++;
       }
     }
     const matesArr = Object.values(synergyMap).map((s) => ({

@@ -49,6 +49,7 @@ export class MatchResultService {
 
     if (won) newElo += POINTS_PER_GAME + goalDiff;
     if (lost) newElo -= POINTS_PER_GAME + goalDiff;
+    if (draw) newElo += POINTS_PER_GAME / 2;
 
     const winCount = player.winCount + (won ? 1 : 0);
     const lossCount = player.lossCount + (lost ? 1 : 0);
