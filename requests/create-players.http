@@ -184,3 +184,15 @@ Content-Type: application/json
   "name": "Tolo",
   "initialElo": 980
 }
+
+###
+
+POST http://localhost:3000/players
+Content-Type: application/json
+
+{
+  "name": "Mati T",
+  "initialElo": 980
+}
+
+###
