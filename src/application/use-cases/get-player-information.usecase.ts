@@ -89,7 +89,10 @@ export class GetPlayerInformationUseCase {
 
     // --- Calcular sinergias ---
     // Map: compañeroId -> { nombre, victorias, empates, derrotas, partidos }
-    const synergyMap: Record<string, { mate: string; victories: number; draws: number; losses: number; matches: number }> = {};
+    const synergyMap: Record<
+      string,
+      { mate: string; victories: number; draws: number; losses: number; matches: number }
+    > = {};
     for (const match of playerMatches) {
       // Determinar en qué equipo jugó el jugador
       let myTeamPlayers, won, lost;
@@ -103,7 +106,7 @@ export class GetPlayerInformationUseCase {
         lost = match.winner === 'A';
       }
       const draw = match.winner === 'draw';
-      
+
       for (const mate of myTeamPlayers) {
         if (mate.id === player.id) continue;
         if (!synergyMap[mate.id]) {
@@ -187,9 +190,11 @@ export class GetPlayerInformationUseCase {
       totalMatches > 0 ? Math.round((player.totalMatchesPlayed / totalMatches) * 100) : 0;
 
     // Calcular winrate (empates cuentan como medio punto)
-    const equivalentWins = player.winCount + (player.drawCount * 0.5);
-    const winRate = player.totalMatchesPlayed > 0 ? 
-      Math.round((equivalentWins / player.totalMatchesPlayed) * 100) : 0;
+    const equivalentWins = player.winCount + player.drawCount * 0.5;
+    const winRate =
+      player.totalMatchesPlayed > 0
+        ? Math.round((equivalentWins / player.totalMatchesPlayed) * 100)
+        : 0;
 
     return {
       id: player.id,
