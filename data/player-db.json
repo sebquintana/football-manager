@@ -1672,5 +1672,18 @@
         "matchId": "d5e12574-6cd6-48d7-8bf4-76e1d174489c"
       }
     ]
+  },
+  {
+    "id": "390c8400-df6f-44ec-ad83-ea9787e0f210",
+    "name": "Mauro",
+    "elo": 970,
+    "initialElo": 970,
+    "totalMatchesPlayed": 0,
+    "winCount": 0,
+    "lossCount": 0,
+    "drawCount": 0,
+    "goalsFor": 0,
+    "goalsAgainst": 0,
+    "history": []
   }
 ]
