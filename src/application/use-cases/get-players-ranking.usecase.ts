@@ -21,7 +21,7 @@ export class GetPlayersRankingUseCase {
       .filter((player) => {
         // Filtrar solo jugadores con más del 50% de asistencia
         const attendanceRate = totalMatches > 0 ? player.totalMatchesPlayed / totalMatches : 0;
-        return attendanceRate > 0;
+        return attendanceRate > 0.3;
       })
       .sort((a, b) => b.elo - a.elo)
       .map((p, index) => ({

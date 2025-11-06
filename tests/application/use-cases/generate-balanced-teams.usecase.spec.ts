@@ -1,11 +1,13 @@
-import { GenerateBalancedTeamsUseCase } from '@application/use-cases/generate-balanced-teams.usecase';
-import { PlayerRepository } from '@domain/ports/player.repository';
-import { Player } from '@domain/entities/player';
-import { GenerateBalancedTeamsDto } from '@application/dto/generate-balanced-teams.dto';
+import { GenerateBalancedTeamsUseCase } from '../../../src/application/use-cases/generate-balanced-teams.usecase';
+import { PlayerRepository } from '../../../src/domain/ports/player.repository';
+import { MatchRepository } from '../../../src/domain/ports/match.repository';
+import { Player } from '../../../src/domain/entities/player';
+import { GenerateBalancedTeamsDto } from '../../../src/application/dto/generate-balanced-teams.dto';
 
 describe('GenerateBalancedTeamsUseCase', () => {
   let useCase: GenerateBalancedTeamsUseCase;
-  let mockRepo: jest.Mocked<PlayerRepository>;
+  let mockPlayerRepo: jest.Mocked<PlayerRepository>;
+  let mockMatchRepo: jest.Mocked<MatchRepository>;
 
   const buildPlayer = (id: string, name: string, elo: number): Player =>
     new Player(id, name, elo, elo, 0, 0, 0, 0, 0, 0, []);
@@ -24,28 +26,38 @@ describe('GenerateBalancedTeamsUseCase', () => {
   ];
 
   beforeEach(() => {
-    mockRepo = {
+    mockPlayerRepo = {
       findAll: jest.fn().mockResolvedValue(mockPlayers),
       save: jest.fn(),
     };
 
-    useCase = new GenerateBalancedTeamsUseCase(mockRepo);
+    mockMatchRepo = {
+      findAll: jest.fn().mockResolvedValue([]),
+      save: jest.fn(),
+    };
+
+    useCase = new GenerateBalancedTeamsUseCase(mockPlayerRepo, mockMatchRepo);
   });
 
   it('should return balanced team options with correct structure', async () => {
     const dto: GenerateBalancedTeamsDto = {
-      playerNames: mockPlayers.map(p => p.name),
+      playerNames: mockPlayers.map((p) => p.name),
     };
 
     const result = await useCase.execute(dto);
 
     expect(result).toBeDefined();
-    expect(result.length).toBeLessThanOrEqual(5);
+    expect(result.length).toBeLessThanOrEqual(15);
     expect(result[0]).toHaveProperty('teamA');
     expect(result[0]).toHaveProperty('teamB');
     expect(result[0]).toHaveProperty('eloA');
     expect(result[0]).toHaveProperty('eloB');
     expect(result[0]).toHaveProperty('difference');
-    expect(mockRepo.findAll).toHaveBeenCalled();
+    expect(result[0]).toHaveProperty('teamAMetrics');
+    expect(result[0]).toHaveProperty('teamBMetrics');
+    expect(result[0]).toHaveProperty('balanceScore');
+    expect(result[0]).toHaveProperty('synergyWarnings');
+    expect(mockPlayerRepo.findAll).toHaveBeenCalled();
+    expect(mockMatchRepo.findAll).toHaveBeenCalled();
   });
 });
