@@ -1,4 +1,4 @@
-import { IsArray, ArrayMinSize, ArrayMaxSize, IsString } from 'class-validator';
+import { IsArray, ArrayMinSize, ArrayMaxSize, IsString, IsOptional } from 'class-validator';
 
 export class GenerateBalancedTeamsDto {
   @IsArray()
@@ -6,4 +6,8 @@ export class GenerateBalancedTeamsDto {
   @ArrayMaxSize(10)
   @IsString({ each: true })
   playerNames!: string[];
+
+  @IsOptional()
+  @IsArray()
+  mustSplit?: string[][];
 }

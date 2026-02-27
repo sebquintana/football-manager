@@ -6,18 +6,21 @@ import { Player } from '@domain/entities/player';
 import { combinations } from '@utils/combinations';
 import { MatchRepository } from '@domain/ports/match.repository';
 
+// Exponential decay weights for recent form (index 0 = most recent match)
+const FORM_DECAY_WEIGHTS = [1.0, 0.8, 0.64, 0.512, 0.4096];
+
 interface TeamMetrics {
   avgElo: number;
   avgWinRate: number;
-  recentForm: number; // Promedio de últimos 5 partidos (1=win, 0.5=draw, 0=loss)
-  synergyScore: number; // Qué tan bien juegan juntos históricamente
+  recentForm: number; // Promedio ponderado de últimos 5 partidos (1=win, 0.5=draw, 0=loss)
+  synergyScore: number; // Qué tan bien juegan juntos históricamente (Bayesian-adjusted)
   victoryProbability: number; // Probabilidad estimada de victoria
 }
 
 interface EnhancedBalancedTeamOptionDto extends BalancedTeamOptionDto {
   teamAMetrics: TeamMetrics;
   teamBMetrics: TeamMetrics;
-  balanceScore: number; // Qué tan equilibrado está el match (0=perfecto, mayor=peor)
+  balanceScore: number; // Diferencia de victoryProbability entre equipos (0=perfecto)
   synergyWarnings: string[]; // Duplas problemáticas detectadas
 }
 
@@ -40,15 +43,29 @@ export class GenerateBalancedTeamsUseCase {
       return player;
     });
 
-    // Calcular sinergias entre todos los jugadores
+    // Pre-computar forma reciente por jugador (evita re-escanear partidos en cada combinación)
+    const formByPlayerId = new Map<string, number>();
+    for (const player of selectedPlayers) {
+      formByPlayerId.set(player.id, this.calculatePlayerRecentForm(player, allMatches));
+    }
+
+    // Rango de ELO dinámico basado en el pool real (evita clampeo con valores hardcodeados)
+    const elos = selectedPlayers.map((p) => p.elo);
+    const minElo = Math.min(...elos);
+    const maxElo = Math.max(...elos);
+
     const synergyMatrix = this.calculateSynergyMatrix(selectedPlayers, allMatches);
 
     const allTeams = combinations(selectedPlayers, 5);
     const results: EnhancedBalancedTeamOptionDto[] = [];
     const seenCombinations = new Set<string>();
 
+    // Constraints configurables: por defecto Nico y Nahue no pueden estar juntos
+    const mustSplit = (dto.mustSplit ?? [['nico', 'nahue']]).map((pair) =>
+      pair.map((n) => n.toLowerCase()),
+    );
+
     for (const teamA of allTeams) {
-      // Restricción: Nico y Nahue no pueden estar en el mismo equipo
       const teamANames = teamA
         .map((p: Player) => p.name.toLowerCase())
         .sort((a, b) => a.localeCompare(b));
@@ -57,29 +74,36 @@ export class GenerateBalancedTeamsUseCase {
         .map((p: Player) => p.name.toLowerCase())
         .sort((a, b) => a.localeCompare(b));
 
-      if (
-        (teamANames.includes('nico') && teamANames.includes('nahue')) ||
-        (teamBNames.includes('nico') && teamBNames.includes('nahue'))
-      ) {
-        continue;
-      }
+      // Aplicar constraints must-split
+      const violatesConstraint = mustSplit.some(
+        ([a, b]) =>
+          (teamANames.includes(a) && teamANames.includes(b)) ||
+          (teamBNames.includes(a) && teamBNames.includes(b)),
+      );
+      if (violatesConstraint) continue;
 
-      // Filtrar combinaciones duplicadas
+      // Filtrar combinaciones duplicadas (A vs B == B vs A)
       const key = `${teamANames.join(',')}|${teamBNames.join(',')}`;
       const reverseKey = `${teamBNames.join(',')}|${teamANames.join(',')}`;
-      if (seenCombinations.has(key) || seenCombinations.has(reverseKey)) {
-        continue;
-      }
+      if (seenCombinations.has(key) || seenCombinations.has(reverseKey)) continue;
       seenCombinations.add(key);
 
-      // Calcular métricas avanzadas
-      const teamAMetrics = this.calculateTeamMetrics(teamA, allMatches, synergyMatrix);
-      const teamBMetrics = this.calculateTeamMetrics(teamB, allMatches, synergyMatrix);
+      const teamAMetrics = this.calculateTeamMetrics(
+        teamA,
+        synergyMatrix,
+        formByPlayerId,
+        minElo,
+        maxElo,
+      );
+      const teamBMetrics = this.calculateTeamMetrics(
+        teamB,
+        synergyMatrix,
+        formByPlayerId,
+        minElo,
+        maxElo,
+      );
 
-      // Detectar duplas problemáticas
       const synergyWarnings = this.detectProblematicPairs(teamA, teamB, synergyMatrix);
-
-      // Calcular score de balance general
       const balanceScore = this.calculateBalanceScore(teamAMetrics, teamBMetrics);
 
       const eloA = teamA.reduce((sum: number, p: Player) => sum + p.elo, 0);
@@ -98,7 +122,6 @@ export class GenerateBalancedTeamsUseCase {
       });
     }
 
-    // Ordenar por balance score (mejor balance = menor score)
     return results.sort((a, b) => a.balanceScore - b.balanceScore).slice(0, 15);
   }
 
@@ -108,7 +131,6 @@ export class GenerateBalancedTeamsUseCase {
   ): Map<string, Map<string, { wins: number; total: number; winRate: number }>> {
     const synergyMatrix = new Map();
 
-    // Inicializar matriz
     for (const p1 of players) {
       synergyMatrix.set(p1.id, new Map());
       for (const p2 of players) {
@@ -118,23 +140,18 @@ export class GenerateBalancedTeamsUseCase {
       }
     }
 
-    // Analizar partidos históricos
     for (const match of matches) {
       const teamAIds = match.teamA.players.map((p: any) => p.id);
       const teamBIds = match.teamB.players.map((p: any) => p.id);
-
-      // Procesar sinergias del equipo A
       this.updateTeamSynergies(teamAIds, match.winner === 'A', synergyMatrix);
-      // Procesar sinergias del equipo B
       this.updateTeamSynergies(teamBIds, match.winner === 'B', synergyMatrix);
     }
 
-    // Calcular winrates
-    for (const [playerId, teammates] of synergyMatrix) {
-      for (const [teammateId, stats] of teammates) {
-        if (stats.total > 0) {
-          stats.winRate = stats.wins / stats.total;
-        }
+    // Prior bayesiano: winRate ajustado = (wins + 1) / (total + 2)
+    // Estabiliza estimaciones con pocos datos (0/0 → 0.5, 1/1 → 0.67 en vez de 1.0)
+    for (const [, teammates] of synergyMatrix) {
+      for (const [, stats] of teammates) {
+        stats.winRate = (stats.wins + 1) / (stats.total + 2);
       }
     }
 
@@ -172,75 +189,63 @@ export class GenerateBalancedTeamsUseCase {
 
   private calculateTeamMetrics(
     team: Player[],
-    allMatches: any[],
     synergyMatrix: Map<string, Map<string, any>>,
+    formByPlayerId: Map<string, number>,
+    minElo: number,
+    maxElo: number,
   ): TeamMetrics {
     const avgElo = team.reduce((sum, p) => sum + p.elo, 0) / team.length;
 
-    // Calcular winrate promedio del equipo
     const avgWinRate =
       team.reduce((sum, p) => {
-        const wins = p.winCount;
-        const draws = p.drawCount;
         const total = p.totalMatchesPlayed;
-        return sum + (total > 0 ? (wins + draws * 0.5) / total : 0);
+        return sum + (total > 0 ? (p.winCount + p.drawCount * 0.5) / total : 0);
       }, 0) / team.length;
 
-    // Calcular forma reciente (últimos 5 partidos)
-    const recentForm = this.calculateRecentForm(team, allMatches);
+    const recentForm =
+      team.reduce((sum, p) => sum + (formByPlayerId.get(p.id) ?? 0.5), 0) / team.length;
 
-    // Calcular sinergia del equipo
     const synergyScore = this.calculateTeamSynergy(team, synergyMatrix);
 
-    // Calcular probabilidad de victoria basada en todas las métricas
     const victoryProbability = this.calculateVictoryProbability(
       avgElo,
       avgWinRate,
       recentForm,
       synergyScore,
+      minElo,
+      maxElo,
     );
 
-    return {
-      avgElo,
-      avgWinRate,
-      recentForm,
-      synergyScore,
-      victoryProbability,
-    };
+    return { avgElo, avgWinRate, recentForm, synergyScore, victoryProbability };
   }
 
-  private calculateRecentForm(team: Player[], allMatches: any[]): number {
-    let totalForm = 0;
-    let playerCount = 0;
+  private calculatePlayerRecentForm(player: Player, allMatches: any[]): number {
+    const playerMatches = allMatches
+      .filter(
+        (m) =>
+          m.teamA.players.some((p: any) => p.id === player.id) ||
+          m.teamB.players.some((p: any) => p.id === player.id),
+      )
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, FORM_DECAY_WEIGHTS.length);
 
-    for (const player of team) {
-      // Encontrar últimos 5 partidos del jugador
-      const playerMatches = allMatches
-        .filter(
-          (m) =>
-            m.teamA.players.some((p: any) => p.id === player.id) ||
-            m.teamB.players.some((p: any) => p.id === player.id),
-        )
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 5);
+    if (playerMatches.length === 0) return 0.5;
 
-      if (playerMatches.length > 0) {
-        let playerForm = 0;
-        for (const match of playerMatches) {
-          const isInTeamA = match.teamA.players.some((p: any) => p.id === player.id);
-          const won = (isInTeamA && match.winner === 'A') || (!isInTeamA && match.winner === 'B');
-          const draw = match.winner === 'draw';
+    let weightedSum = 0;
+    let totalWeight = 0;
 
-          if (won) playerForm += 1;
-          else if (draw) playerForm += 0.5;
-          // Loss = 0
-        }
-        totalForm += playerForm / playerMatches.length;
-        playerCount++;
-      }
+    for (let i = 0; i < playerMatches.length; i++) {
+      const match = playerMatches[i];
+      const weight = FORM_DECAY_WEIGHTS[i];
+      const isInTeamA = match.teamA.players.some((p: any) => p.id === player.id);
+      const won = (isInTeamA && match.winner === 'A') || (!isInTeamA && match.winner === 'B');
+      const draw = match.winner === 'draw';
+
+      weightedSum += (won ? 1 : draw ? 0.5 : 0) * weight;
+      totalWeight += weight;
     }
 
-    return playerCount > 0 ? totalForm / playerCount : 0.5;
+    return weightedSum / totalWeight;
   }
 
   private calculateTeamSynergy(
@@ -256,17 +261,14 @@ export class GenerateBalancedTeamsUseCase {
         const p2 = team[j];
 
         if (synergyMatrix.has(p1.id) && synergyMatrix.get(p1.id)?.has(p2.id)) {
-          const stats = synergyMatrix.get(p1.id)?.get(p2.id);
-          if (stats.total >= 2) {
-            // Solo considerar duplas con al menos 2 partidos juntos
-            totalSynergy += stats.winRate;
-            pairCount++;
-          }
+          // winRate ya tiene prior bayesiano, incluimos todas las duplas
+          totalSynergy += synergyMatrix.get(p1.id)!.get(p2.id).winRate;
+          pairCount++;
         }
       }
     }
 
-    return pairCount > 0 ? totalSynergy / pairCount : 0.5; // Default neutral si no hay data
+    return pairCount > 0 ? totalSynergy / pairCount : 0.5;
   }
 
   private calculateVictoryProbability(
@@ -274,40 +276,20 @@ export class GenerateBalancedTeamsUseCase {
     avgWinRate: number,
     recentForm: number,
     synergyScore: number,
+    minElo: number,
+    maxElo: number,
   ): number {
-    // Pesos para cada métrica
-    const eloWeight = 0.4;
-    const winRateWeight = 0.3;
-    const formWeight = 0.2;
-    const synergyWeight = 0.1;
+    const eloRange = maxElo - minElo;
+    // Normalización dinámica: si todos tienen el mismo ELO → 0.5 neutral
+    const normalizedElo = eloRange > 0 ? (avgElo - minElo) / eloRange : 0.5;
 
-    // Normalizar ELO (asumiendo rango 900-1100)
-    const normalizedElo = Math.max(0, Math.min(1, (avgElo - 900) / 200));
-
-    return (
-      normalizedElo * eloWeight +
-      avgWinRate * winRateWeight +
-      recentForm * formWeight +
-      synergyScore * synergyWeight
-    );
+    return normalizedElo * 0.4 + avgWinRate * 0.3 + recentForm * 0.2 + synergyScore * 0.1;
   }
 
   private calculateBalanceScore(teamAMetrics: TeamMetrics, teamBMetrics: TeamMetrics): number {
-    // Diferencias entre equipos (menor = mejor balance)
-    const eloDiff = Math.abs(teamAMetrics.avgElo - teamBMetrics.avgElo);
-    const winRateDiff = Math.abs(teamAMetrics.avgWinRate - teamBMetrics.avgWinRate);
-    const formDiff = Math.abs(teamAMetrics.recentForm - teamBMetrics.recentForm);
-    const probabilityDiff = Math.abs(
-      teamAMetrics.victoryProbability - teamBMetrics.victoryProbability,
-    );
-
-    // Score ponderado (menor = mejor)
-    return (
-      eloDiff * 0.4 +
-      winRateDiff * 100 * 0.3 + // Multiplicar por 100 para escalar
-      formDiff * 100 * 0.2 +
-      probabilityDiff * 100 * 0.1
-    );
+    // Solo la diferencia de victoryProbability — ya agrega ELO, winRate, form y sinergia
+    // Evita el double-counting de sumar también las diferencias individuales
+    return Math.abs(teamAMetrics.victoryProbability - teamBMetrics.victoryProbability);
   }
 
   private detectProblematicPairs(
@@ -316,7 +298,7 @@ export class GenerateBalancedTeamsUseCase {
     synergyMatrix: Map<string, Map<string, any>>,
   ): string[] {
     const warnings: string[] = [];
-    const threshold = 0.3; // Duplas con menos de 30% winrate son problemáticas
+    const threshold = 0.3;
 
     const checkTeam = (team: Player[], teamName: string) => {
       for (let i = 0; i < team.length; i++) {
@@ -325,7 +307,7 @@ export class GenerateBalancedTeamsUseCase {
           const p2 = team[j];
 
           if (synergyMatrix.has(p1.id) && synergyMatrix.get(p1.id)?.has(p2.id)) {
-            const stats = synergyMatrix.get(p1.id)?.get(p2.id);
+            const stats = synergyMatrix.get(p1.id)!.get(p2.id);
             if (stats.total >= 3 && stats.winRate < threshold) {
               warnings.push(
                 `Equipo ${teamName}: ${p1.name} y ${p2.name} tienen baja sinergia (${(stats.winRate * 100).toFixed(1)}% en ${stats.total} partidos)`,
