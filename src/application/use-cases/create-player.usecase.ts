@@ -17,7 +17,13 @@ export class CreatePlayerUseCase {
       dto.name,
       dto.initialElo,
       dto.initialElo,
-      0, 0, 0, 0, 0, 0, []
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      [],
     );
 
     return this.playerRepository.save(player);

@@ -39,7 +39,7 @@ export class CreateMatchUseCase {
     const updatedPlayers = MatchResultService.processMatch(match);
 
     for (const updated of updatedPlayers) {
-     await this.playerRepository.save(updated);
+      await this.playerRepository.save(updated);
     }
 
     await this.matchRepository.save(match);

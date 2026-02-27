@@ -19,20 +19,53 @@ export class FileMatchRepository implements MatchRepository {
     try {
       const raw = await fs.readFile(filePath, 'utf-8');
       const data = JSON.parse(raw);
-      return data.map((m: any) => new Match(
-        m.id,
-        new Date(m.date),
-        new Team(m.teamA.id, m.teamA.players.map((p: Player) => new Player(
-          p.id, p.name, p.elo, p.initialElo, p.totalMatchesPlayed,
-          p.winCount, p.lossCount, p.drawCount, p.goalsFor, p.goalsAgainst, p.history
-        ))),
-        new Team(m.teamB.id, m.teamB.players.map((p: Player) => new Player(
-          p.id, p.name, p.elo, p.initialElo, p.totalMatchesPlayed,
-          p.winCount, p.lossCount, p.drawCount, p.goalsFor, p.goalsAgainst, p.history
-        ))),
-        m.winner,
-        m.goalDifference
-      ));
+      return data.map(
+        (m: any) =>
+          new Match(
+            m.id,
+            new Date(m.date),
+            new Team(
+              m.teamA.id,
+              m.teamA.players.map(
+                (p: Player) =>
+                  new Player(
+                    p.id,
+                    p.name,
+                    p.elo,
+                    p.initialElo,
+                    p.totalMatchesPlayed,
+                    p.winCount,
+                    p.lossCount,
+                    p.drawCount,
+                    p.goalsFor,
+                    p.goalsAgainst,
+                    p.history,
+                  ),
+              ),
+            ),
+            new Team(
+              m.teamB.id,
+              m.teamB.players.map(
+                (p: Player) =>
+                  new Player(
+                    p.id,
+                    p.name,
+                    p.elo,
+                    p.initialElo,
+                    p.totalMatchesPlayed,
+                    p.winCount,
+                    p.lossCount,
+                    p.drawCount,
+                    p.goalsFor,
+                    p.goalsAgainst,
+                    p.history,
+                  ),
+              ),
+            ),
+            m.winner,
+            m.goalDifference,
+          ),
+      );
     } catch (err: any) {
       if (err.code === 'ENOENT') return [];
       throw err;

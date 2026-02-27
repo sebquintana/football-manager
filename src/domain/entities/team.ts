@@ -15,6 +15,6 @@ export class Team {
   }
 
   hasPlayer(playerId: string): boolean {
-    return this.players.some(p => p.id === playerId);
+    return this.players.some((p) => p.id === playerId);
   }
 }
