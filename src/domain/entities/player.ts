@@ -24,8 +24,8 @@ export class Player {
     return this.winCount / this.totalMatchesPlayed;
   }
 
-  updateElo(newElo: number): Player {
-    const newHistory = [...this.history, new EloChange(this.elo, newElo)];
+  updateElo(newElo: number, matchId?: string): Player {
+    const newHistory = [...this.history, new EloChange(this.elo, newElo, new Date(), matchId)];
     return new Player(
       this.id,
       this.name,

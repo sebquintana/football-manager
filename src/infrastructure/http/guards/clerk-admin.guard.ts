@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
   ForbiddenException,
 } from '@nestjs/common';
-import { verifyToken } from '@clerk/backend';
+import { verifyToken, createClerkClient } from '@clerk/backend';
 
 @Injectable()
 export class ClerkAdminGuard implements CanActivate {
@@ -27,6 +27,9 @@ export class ClerkAdminGuard implements CanActivate {
       if (role !== 'admin') {
         throw new ForbiddenException('Admin role required');
       }
+      const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+      const adminUser = await clerk.users.getUser(payload.sub);
+      request.adminEmail = adminUser.primaryEmailAddress?.emailAddress ?? payload.sub;
       return true;
     } catch (err) {
       if (err instanceof ForbiddenException) throw err;

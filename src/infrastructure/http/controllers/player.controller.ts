@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { CreatePlayerUseCase } from '@application/use-cases/create-player.usecase';
 import { GetAllPlayersUseCase } from '@application/use-cases/get-all-players.usecase';
 import { UpdatePlayerEloUseCase } from '@application/use-cases/update-player-elo.usecase';
@@ -34,7 +34,7 @@ export class PlayerController {
 
   @Patch(':id/elo')
   @UseGuards(ClerkAdminGuard)
-  async updateElo(@Param('id') id: string, @Body('elo') elo: number): Promise<void> {
-    return this.updatePlayerEloUseCase.execute(id, elo);
+  async updateElo(@Param('id') id: string, @Body('elo') elo: number, @Req() req: any): Promise<void> {
+    return this.updatePlayerEloUseCase.execute(id, elo, req.adminEmail);
   }
 }
