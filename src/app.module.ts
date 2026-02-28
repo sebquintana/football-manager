@@ -18,6 +18,7 @@ import { GetGeneralStatisticsUseCase } from '@application/use-cases/get-general-
 
 import { PlayerEntity } from '@infrastructure/adapters/persistence/typeorm/entities/player.entity';
 import { MatchEntity } from '@infrastructure/adapters/persistence/typeorm/entities/match.entity';
+import { MatchPlayerEntity } from '@infrastructure/adapters/persistence/typeorm/entities/match-player.entity';
 import { TypeOrmPlayerRepository } from '@infrastructure/adapters/persistence/typeorm/player.repository.typeorm';
 import { TypeOrmMatchRepository } from '@infrastructure/adapters/persistence/typeorm/match.repository.typeorm';
 import { NoOpTeamRepository } from '@infrastructure/adapters/persistence/typeorm/team.repository.noop';
@@ -28,10 +29,10 @@ import { NoOpTeamRepository } from '@infrastructure/adapters/persistence/typeorm
       type: 'postgres',
       url: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false },
-      entities: [PlayerEntity, MatchEntity],
+      entities: [PlayerEntity, MatchEntity, MatchPlayerEntity],
       synchronize: false,
     }),
-    TypeOrmModule.forFeature([PlayerEntity, MatchEntity]),
+    TypeOrmModule.forFeature([PlayerEntity, MatchEntity, MatchPlayerEntity]),
   ],
   controllers: [
     PlayerController,
