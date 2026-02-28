@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlayerController } from '@infrastructure/http/controllers/player.controller';
 import { MatchController } from '@infrastructure/http/controllers/match.controller';
 import { TeamBalanceController } from '@infrastructure/http/controllers/team-balance.controller';
@@ -15,12 +16,23 @@ import { GetPlayerInformationUseCase } from '@application/use-cases/get-player-i
 import { GetPlayersRankingUseCase } from '@application/use-cases/get-players-ranking.usecase';
 import { GetGeneralStatisticsUseCase } from '@application/use-cases/get-general-statistics.usecase';
 
-import { FilePlayerRepository } from '@infrastructure/adapters/persistence/files/player.repository.file';
-import { FileTeamRepository } from '@infrastructure/adapters/persistence/files/team.repository.file';
-import { FileMatchRepository } from '@infrastructure/adapters/persistence/files/match.repository.file';
+import { PlayerEntity } from '@infrastructure/adapters/persistence/typeorm/entities/player.entity';
+import { MatchEntity } from '@infrastructure/adapters/persistence/typeorm/entities/match.entity';
+import { TypeOrmPlayerRepository } from '@infrastructure/adapters/persistence/typeorm/player.repository.typeorm';
+import { TypeOrmMatchRepository } from '@infrastructure/adapters/persistence/typeorm/match.repository.typeorm';
+import { NoOpTeamRepository } from '@infrastructure/adapters/persistence/typeorm/team.repository.noop';
 
 @Module({
-  imports: [],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+      entities: [PlayerEntity, MatchEntity],
+      synchronize: false,
+    }),
+    TypeOrmModule.forFeature([PlayerEntity, MatchEntity]),
+  ],
   controllers: [
     PlayerController,
     MatchController,
@@ -40,15 +52,15 @@ import { FileMatchRepository } from '@infrastructure/adapters/persistence/files/
     GetGeneralStatisticsUseCase,
     {
       provide: 'PlayerRepository',
-      useClass: FilePlayerRepository,
+      useClass: TypeOrmPlayerRepository,
     },
     {
       provide: 'MatchRepository',
-      useClass: FileMatchRepository,
+      useClass: TypeOrmMatchRepository,
     },
     {
       provide: 'TeamRepository',
-      useClass: FileTeamRepository,
+      useClass: NoOpTeamRepository,
     },
   ],
 })

@@ -10,7 +10,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/players
+POST https://football-manager-production-d513.up.railway.app/players
 Content-Type: application/json
 
 {
