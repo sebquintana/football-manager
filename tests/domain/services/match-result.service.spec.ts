@@ -24,10 +24,7 @@ describe('MatchResultService', () => {
     buildPlayer('10', 'Seba P', 1000),
   ];
 
-  const buildMatch = (
-    winner: 'A' | 'B' | 'draw',
-    goalDifference: number,
-  ): Match => {
+  const buildMatch = (winner: 'A' | 'B' | 'draw', goalDifference: number): Match => {
     return new Match(
       uuidv4(),
       new Date(),
@@ -42,8 +39,8 @@ describe('MatchResultService', () => {
     const match = buildMatch('A', 2);
     const result = MatchResultService.processMatch(match);
 
-    const axel = result.find(p => p.name === 'Axel')!;
-    const nahue = result.find(p => p.name === 'Nahue')!;
+    const axel = result.find((p) => p.name === 'Axel')!;
+    const nahue = result.find((p) => p.name === 'Nahue')!;
 
     expect(axel.winCount).toBe(1);
     expect(nahue.lossCount).toBe(1);
@@ -56,16 +53,16 @@ describe('MatchResultService', () => {
     expect(axel.history[0].newElo).toBe(1012);
   });
 
-  it('should correctly apply draw and keep elo unchanged', () => {
+  it('should correctly apply draw and grant both teams +5 elo', () => {
     const match = buildMatch('draw', 0);
     const result = MatchResultService.processMatch(match);
 
-    const axel = result.find(p => p.name === 'Axel')!;
-    const nahue = result.find(p => p.name === 'Nahue')!;
+    const axel = result.find((p) => p.name === 'Axel')!;
+    const nahue = result.find((p) => p.name === 'Nahue')!;
 
     expect(axel.drawCount).toBe(1);
     expect(nahue.drawCount).toBe(1);
-    expect(axel.elo).toBe(1000);
-    expect(nahue.elo).toBe(1000);
+    expect(axel.elo).toBe(1005); // +5 (POINTS_PER_GAME / 2)
+    expect(nahue.elo).toBe(1005); // +5 (POINTS_PER_GAME / 2)
   });
 });
