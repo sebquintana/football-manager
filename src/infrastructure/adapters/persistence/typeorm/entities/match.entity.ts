@@ -15,6 +15,9 @@ export class MatchEntity {
   @Column('int', { name: 'goal_difference', default: 0 })
   goalDifference!: number;
 
+  @Column('int', { default: 2025 })
+  season!: number;
+
   @OneToMany(() => MatchPlayerEntity, (mp) => mp.match, { cascade: true, eager: false })
   matchPlayers!: MatchPlayerEntity[];
 }

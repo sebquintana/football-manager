@@ -12,9 +12,9 @@ export class GetGeneralStatisticsUseCase {
     private readonly matchRepository: MatchRepository,
   ) {}
 
-  async execute(): Promise<GeneralStatisticsDto> {
+  async execute(season?: number): Promise<GeneralStatisticsDto> {
     const players = await this.playerRepository.findAll();
-    const matches = await this.matchRepository.findAll();
+    const matches = await this.matchRepository.findAll(season);
 
     // Filter active players (with at least 1 match)
     const activePlayers = players.filter((p) => p.totalMatchesPlayed > 0);

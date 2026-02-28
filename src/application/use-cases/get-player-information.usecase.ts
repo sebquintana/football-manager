@@ -52,13 +52,13 @@ export class GetPlayerInformationUseCase {
     private readonly matchRepository: MatchRepository,
   ) {}
 
-  async execute(playerName: string): Promise<PlayerInformationDto> {
+  async execute(playerName: string, season?: number): Promise<PlayerInformationDto> {
     const allPlayers = await this.playerRepository.findAll();
     const player = allPlayers.find((p) => p.name.toLowerCase() === playerName.toLowerCase());
     if (!player) throw new NotFoundException('Player not found');
 
     // Buscar los partidos donde jugó este jugador
-    const matches = await this.matchRepository.findAll();
+    const matches = await this.matchRepository.findAll(season);
     const playerMatches = matches.filter(
       (m) =>
         m.teamA.players.some((p) => p.id === player.id) ||

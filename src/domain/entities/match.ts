@@ -8,5 +8,6 @@ export class Match {
     public readonly teamB: Team,
     public readonly winner: 'A' | 'B' | 'draw',
     public readonly goalDifference: number,
+    public readonly season: number = new Date().getFullYear(),
   ) {}
 }

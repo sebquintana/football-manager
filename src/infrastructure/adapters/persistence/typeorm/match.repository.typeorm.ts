@@ -41,16 +41,18 @@ export class TypeOrmMatchRepository implements MatchRepository {
       date: match.date,
       winner: match.winner,
       goalDifference: match.goalDifference,
+      season: match.season,
       matchPlayers,
     });
 
     return match;
   }
 
-  async findAll(): Promise<Match[]> {
+  async findAll(season?: number): Promise<Match[]> {
     const entities = await this.matchRepo.find({
       relations: ['matchPlayers', 'matchPlayers.player'],
       order: { date: 'DESC' },
+      ...(season !== undefined ? { where: { season } } : {}),
     });
 
     return entities.map((e) => {
@@ -79,6 +81,7 @@ export class TypeOrmMatchRepository implements MatchRepository {
         new Team(`${e.id}-B`, teamBMps.map(toPlayer)),
         e.winner as 'A' | 'B' | 'draw',
         e.goalDifference,
+        e.season,
       );
     });
   }

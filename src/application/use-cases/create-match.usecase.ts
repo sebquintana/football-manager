@@ -27,13 +27,15 @@ export class CreateMatchUseCase {
     const teamA = new Team(uuidv4(), teamAPlayers);
     const teamB = new Team(uuidv4(), teamBPlayers);
 
+    const matchDate = new Date(dto.date);
     const match = new Match(
       uuidv4(),
-      new Date(dto.date),
+      matchDate,
       teamA,
       teamB,
       dto.winner,
       dto.goalDifference,
+      matchDate.getFullYear(),
     );
 
     const updatedPlayers = MatchResultService.processMatch(match);

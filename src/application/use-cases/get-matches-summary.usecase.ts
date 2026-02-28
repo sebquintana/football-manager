@@ -18,8 +18,8 @@ export class GetMatchesSummaryUseCase {
     private readonly matchRepository: MatchRepository,
   ) {}
 
-  async execute(): Promise<MatchSummaryDto[]> {
-    const matches = await this.matchRepository.findAll();
+  async execute(season?: number): Promise<MatchSummaryDto[]> {
+    const matches = await this.matchRepository.findAll(season);
     return matches.map((match) => ({
       id: match.id,
       date: match.date,

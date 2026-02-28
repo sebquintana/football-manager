@@ -213,3 +213,11 @@ Content-Type: application/json
   "name": "Mauro",
   "initialElo": 970
 }
+###
+POST https://football-manager-production-d513.up.railway.app/players
+Content-Type: application/json
+
+{
+  "name": "Tano",
+  "initialElo": 1010
+}
