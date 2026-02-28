@@ -15,6 +15,7 @@ import { GetMatchesSummaryUseCase } from '@application/use-cases/get-matches-sum
 import { GetPlayerInformationUseCase } from '@application/use-cases/get-player-information.usecase';
 import { GetPlayersRankingUseCase } from '@application/use-cases/get-players-ranking.usecase';
 import { GetGeneralStatisticsUseCase } from '@application/use-cases/get-general-statistics.usecase';
+import { UpdatePlayerEloUseCase } from '@application/use-cases/update-player-elo.usecase';
 
 import { PlayerEntity } from '@infrastructure/adapters/persistence/typeorm/entities/player.entity';
 import { MatchEntity } from '@infrastructure/adapters/persistence/typeorm/entities/match.entity';
@@ -51,6 +52,7 @@ import { NoOpTeamRepository } from '@infrastructure/adapters/persistence/typeorm
     GetMatchesSummaryUseCase,
     GetPlayerInformationUseCase,
     GetGeneralStatisticsUseCase,
+    UpdatePlayerEloUseCase,
     {
       provide: 'PlayerRepository',
       useClass: TypeOrmPlayerRepository,
