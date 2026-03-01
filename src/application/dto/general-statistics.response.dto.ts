@@ -4,6 +4,7 @@ export interface AttendanceStats {
   averageAttendance: number;
   totalMatches: number;
   activePlayers: number; // Players with >50% attendance
+  activePlayerNames: string[];
 }
 
 export interface EloStats {

@@ -42,6 +42,7 @@ export class GetGeneralStatisticsUseCase {
         averageAttendance: 0,
         totalMatches,
         activePlayers: 0,
+        activePlayerNames: [],
       };
     }
 
@@ -61,7 +62,9 @@ export class GetGeneralStatisticsUseCase {
     attendanceRates.sort((a, b) => b.rate - a.rate);
 
     const averageAttendance = attendanceRates.reduce((sum, p) => sum + p.rate, 0) / players.length;
-    const activePlayers = attendanceRates.filter((p) => p.rate > 50).length;
+    const activePlayersData = attendanceRates.filter((p) => p.rate > 50);
+    const activePlayers = activePlayersData.length;
+    const activePlayerNames = activePlayersData.map((p) => p.player);
 
     // Find all players with highest attendance rate
     const highestRate = attendanceRates[0].rate;
@@ -88,6 +91,7 @@ export class GetGeneralStatisticsUseCase {
       averageAttendance: Math.round(averageAttendance * 100) / 100,
       totalMatches,
       activePlayers,
+      activePlayerNames,
     };
   }
 
