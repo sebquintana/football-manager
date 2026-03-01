@@ -20,7 +20,7 @@ export class GetGeneralStatisticsUseCase {
     const activePlayers = players.filter((p) => p.totalMatchesPlayed > 0);
 
     return {
-      attendance: this.calculateAttendanceStats(activePlayers, matches.length),
+      attendance: this.calculateAttendanceStats(activePlayers, matches),
       elo: this.calculateEloStats(activePlayers),
       goals: this.calculateGoalStats(matches),
       results: this.calculateResultStats(matches),
@@ -32,7 +32,8 @@ export class GetGeneralStatisticsUseCase {
     };
   }
 
-  private calculateAttendanceStats(players: any[], totalMatches: number) {
+  private calculateAttendanceStats(players: any[], matches: any[]) {
+    const totalMatches = matches.length;
     if (players.length === 0 || totalMatches === 0) {
       return {
         highestAttendance: { players: ['N/A'], rate: 0 },
@@ -43,10 +44,17 @@ export class GetGeneralStatisticsUseCase {
       };
     }
 
-    const attendanceRates = players.map((p) => ({
-      player: p.name,
-      rate: Math.round((p.totalMatchesPlayed / totalMatches) * 100 * 100) / 100,
-    }));
+    const attendanceRates = players.map((p) => {
+      const matchesPlayedInPeriod = matches.filter(
+        (m) =>
+          m.teamA.players.some((mp: any) => mp.id === p.id) ||
+          m.teamB.players.some((mp: any) => mp.id === p.id),
+      ).length;
+      return {
+        player: p.name,
+        rate: Math.round((matchesPlayedInPeriod / totalMatches) * 100 * 100) / 100,
+      };
+    });
 
     attendanceRates.sort((a, b) => b.rate - a.rate);
 
