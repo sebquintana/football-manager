@@ -1,6 +1,6 @@
 export interface AttendanceStats {
   highestAttendance: { players: string[]; rate: number };
-  lowestAttendance: { players: string[]; rate: number };
+  lowestAttendance: { players: string[]; rate: number; matchesPlayed: number };
   averageAttendance: number;
   totalMatches: number;
   activePlayers: number; // Players with >50% attendance

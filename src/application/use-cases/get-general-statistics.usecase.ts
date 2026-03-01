@@ -38,7 +38,7 @@ export class GetGeneralStatisticsUseCase {
     if (players.length === 0 || totalMatches === 0) {
       return {
         highestAttendance: { players: ['N/A'], rate: 0 },
-        lowestAttendance: { players: ['N/A'], rate: 0 },
+        lowestAttendance: { players: ['N/A'], rate: 0, matchesPlayed: 0 },
         averageAttendance: 0,
         totalMatches,
         activePlayers: 0,
@@ -79,10 +79,12 @@ export class GetGeneralStatisticsUseCase {
       eligibleForLowest.length > 0
         ? eligibleForLowest.filter((p) => p.rate === lowestRate).map((p) => p.player)
         : ['N/A'];
+    const lowestMatchesPlayed =
+      eligibleForLowest.find((p) => p.rate === lowestRate)?.matchesPlayed ?? 0;
 
     return {
       highestAttendance: { players: playersWithHighestAttendance, rate: highestRate },
-      lowestAttendance: { players: playersWithLowestAttendance, rate: lowestRate },
+      lowestAttendance: { players: playersWithLowestAttendance, rate: lowestRate, matchesPlayed: lowestMatchesPlayed },
       averageAttendance: Math.round(averageAttendance * 100) / 100,
       totalMatches,
       activePlayers,
