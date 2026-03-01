@@ -53,6 +53,7 @@ export class GetGeneralStatisticsUseCase {
       ).length;
       return {
         player: p.name,
+        matchesPlayed: matchesPlayedInPeriod,
         rate: Math.round((matchesPlayedInPeriod / totalMatches) * 100 * 100) / 100,
       };
     });
@@ -68,11 +69,16 @@ export class GetGeneralStatisticsUseCase {
       .filter((p) => p.rate === highestRate)
       .map((p) => p.player);
 
-    // Find all players with lowest attendance rate
-    const lowestRate = attendanceRates[attendanceRates.length - 1].rate;
-    const playersWithLowestAttendance = attendanceRates
-      .filter((p) => p.rate === lowestRate)
-      .map((p) => p.player);
+    // Find all players with lowest attendance rate (minimum 3 matches attended)
+    const eligibleForLowest = attendanceRates.filter((p) => p.matchesPlayed >= 3);
+    const lowestRate =
+      eligibleForLowest.length > 0
+        ? eligibleForLowest[eligibleForLowest.length - 1].rate
+        : 0;
+    const playersWithLowestAttendance =
+      eligibleForLowest.length > 0
+        ? eligibleForLowest.filter((p) => p.rate === lowestRate).map((p) => p.player)
+        : ['N/A'];
 
     return {
       highestAttendance: { players: playersWithHighestAttendance, rate: highestRate },
