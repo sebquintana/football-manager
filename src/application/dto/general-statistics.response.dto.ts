@@ -48,8 +48,8 @@ export interface ResultStats {
 }
 
 export interface StreakStats {
-  longestWinStreak: { player: string; streak: number };
-  longestLossStreak: { player: string; streak: number };
+  longestWinStreak: { player: string; streak: number; from: string | null; to: string | null };
+  longestLossStreak: { player: string; streak: number; from: string | null; to: string | null };
   mostStreaky: { player: string; variance: number }; // Player with highest streak variance
   mostConsistent: { player: string; variance: number }; // Player with lowest streak variance
 }

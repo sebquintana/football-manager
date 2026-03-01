@@ -259,8 +259,8 @@ export class GetGeneralStatisticsUseCase {
   private calculateStreakStats(players: any[], matches: any[]) {
     if (players.length === 0 || matches.length === 0) {
       return {
-        longestWinStreak: { player: 'N/A', streak: 0 },
-        longestLossStreak: { player: 'N/A', streak: 0 },
+        longestWinStreak: { player: 'N/A', streak: 0, from: null, to: null },
+        longestLossStreak: { player: 'N/A', streak: 0, from: null, to: null },
         mostStreaky: { player: 'N/A', variance: 0 },
         mostConsistent: { player: 'N/A', variance: 0 },
       };
@@ -285,15 +285,19 @@ export class GetGeneralStatisticsUseCase {
       playerStreakData.push({
         player: player.name,
         maxWinStreak: streaks.maxWinStreak,
+        maxWinFrom: streaks.maxWinFrom,
+        maxWinTo: streaks.maxWinTo,
         maxLossStreak: streaks.maxLossStreak,
+        maxLossFrom: streaks.maxLossFrom,
+        maxLossTo: streaks.maxLossTo,
         streakVariance: streaks.streakVariance,
       });
     }
 
     if (playerStreakData.length === 0) {
       return {
-        longestWinStreak: { player: 'N/A', streak: 0 },
-        longestLossStreak: { player: 'N/A', streak: 0 },
+        longestWinStreak: { player: 'N/A', streak: 0, from: null, to: null },
+        longestLossStreak: { player: 'N/A', streak: 0, from: null, to: null },
         mostStreaky: { player: 'N/A', variance: 0 },
         mostConsistent: { player: 'N/A', variance: 0 },
       };
@@ -331,10 +335,14 @@ export class GetGeneralStatisticsUseCase {
       longestWinStreak: {
         player: longestWinStreakPlayer.player,
         streak: longestWinStreakPlayer.maxWinStreak,
+        from: longestWinStreakPlayer.maxWinFrom ?? null,
+        to: longestWinStreakPlayer.maxWinTo ?? null,
       },
       longestLossStreak: {
         player: longestLossStreakPlayer.player,
         streak: longestLossStreakPlayer.maxLossStreak,
+        from: longestLossStreakPlayer.maxLossFrom ?? null,
+        to: longestLossStreakPlayer.maxLossTo ?? null,
       },
       mostStreaky: {
         player: mostStreakyPlayer.player,
@@ -350,47 +358,62 @@ export class GetGeneralStatisticsUseCase {
   private calculatePlayerStreaks(player: any, playerMatches: any[]) {
     let currentStreak = 0;
     let currentStreakType: 'win' | 'loss' | 'draw' | null = null;
+    let currentStreakFrom: Date | null = null;
+    let prevMatchDate: Date | null = null;
+
     let maxWinStreak = 0;
+    let maxWinFrom: string | null = null;
+    let maxWinTo: string | null = null;
+
     let maxLossStreak = 0;
+    let maxLossFrom: string | null = null;
+    let maxLossTo: string | null = null;
+
     const allStreaks: number[] = [];
+
+    const finalizeStreak = (type: 'win' | 'loss' | 'draw' | null, count: number) => {
+      if (count <= 0 || type === null) return;
+      allStreaks.push(count);
+      const from = currentStreakFrom ? currentStreakFrom.toISOString().split('T')[0] : null;
+      const to = prevMatchDate ? prevMatchDate.toISOString().split('T')[0] : null;
+      if (type === 'win' && count > maxWinStreak) {
+        maxWinStreak = count;
+        maxWinFrom = from;
+        maxWinTo = to;
+      } else if (type === 'loss' && count > maxLossStreak) {
+        maxLossStreak = count;
+        maxLossFrom = from;
+        maxLossTo = to;
+      }
+    };
 
     for (const match of playerMatches) {
       const resultType = this.getPlayerResultInMatch(player, match);
+      const matchDate = new Date(match.date);
 
       if (currentStreakType === resultType) {
         currentStreak++;
       } else {
-        const streakResults = this.processStreakEnd(
-          currentStreak,
-          currentStreakType,
-          allStreaks,
-          maxWinStreak,
-          maxLossStreak,
-        );
-        maxWinStreak = streakResults.maxWinStreak;
-        maxLossStreak = streakResults.maxLossStreak;
-
+        finalizeStreak(currentStreakType, currentStreak);
         currentStreakType = resultType;
         currentStreak = 1;
+        currentStreakFrom = matchDate;
       }
+      prevMatchDate = matchDate;
     }
 
     // Process final streak
-    const finalStreakResults = this.processStreakEnd(
-      currentStreak,
-      currentStreakType,
-      allStreaks,
-      maxWinStreak,
-      maxLossStreak,
-    );
-    maxWinStreak = finalStreakResults.maxWinStreak;
-    maxLossStreak = finalStreakResults.maxLossStreak;
+    finalizeStreak(currentStreakType, currentStreak);
 
     const streakVariance = this.calculateStreakVariance(allStreaks);
 
     return {
       maxWinStreak,
+      maxWinFrom,
+      maxWinTo,
       maxLossStreak,
+      maxLossFrom,
+      maxLossTo,
       streakVariance,
     };
   }
