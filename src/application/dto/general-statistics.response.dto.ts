@@ -70,6 +70,19 @@ export interface SynergyStats {
   teamImprovers: { player: string; teamImpact: number }[]; // Players who improve team performance
 }
 
+export interface SeasonPlayerStat {
+  player: string;
+  value: number; // winRate %, wins count, or elo
+  wins?: number;
+  played?: number;
+}
+
+export interface TopPerformersStats {
+  byWinRate: SeasonPlayerStat[];
+  byWins: SeasonPlayerStat[];
+  bySeasonalElo: SeasonPlayerStat[];
+}
+
 export class GeneralStatisticsDto {
   attendance!: AttendanceStats;
   elo!: EloStats;
@@ -77,6 +90,7 @@ export class GeneralStatisticsDto {
   results!: ResultStats;
   streaks!: StreakStats;
   synergies!: SynergyStats;
+  topPerformers!: TopPerformersStats;
   generatedAt!: string;
   totalPlayers!: number;
   totalMatches!: number;

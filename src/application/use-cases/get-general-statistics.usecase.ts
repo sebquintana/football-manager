@@ -26,6 +26,7 @@ export class GetGeneralStatisticsUseCase {
       results: this.calculateResultStats(matches),
       streaks: this.calculateStreakStats(activePlayers, matches),
       synergies: this.calculateSynergyStats(activePlayers, matches),
+      topPerformers: this.calculateTopPerformers(activePlayers, matches),
       generatedAt: new Date().toISOString(),
       totalPlayers: players.length,
       totalMatches: matches.length,
@@ -602,5 +603,73 @@ export class GetGeneralStatisticsUseCase {
       leastCompatible,
       teamImprovers,
     };
+  }
+
+  private calculateTopPerformers(players: any[], matches: any[]) {
+    if (players.length === 0 || matches.length === 0) {
+      return { byWinRate: [], byWins: [], bySeasonalElo: [] };
+    }
+
+    const seasonMatchIds = new Set(matches.map((m) => m.id));
+
+    const playerStats = players
+      .map((player) => {
+        let wins = 0;
+        let played = 0;
+        for (const match of matches) {
+          const inTeamA = match.teamA.players.some((p: any) => p.id === player.id);
+          const inTeamB = match.teamB.players.some((p: any) => p.id === player.id);
+          if (!inTeamA && !inTeamB) continue;
+          played++;
+          const won = (inTeamA && match.winner === 'A') || (inTeamB && match.winner === 'B');
+          if (won) wins++;
+        }
+
+        // Last history entry whose matchId belongs to this season's matches
+        // admin-edit entries (format "admin-edit:email") are excluded automatically
+        const seasonHistory = (player.history ?? []).filter(
+          (h: any) => h.matchId && seasonMatchIds.has(h.matchId),
+        );
+        const seasonalElo: number | null =
+          seasonHistory.length > 0
+            ? seasonHistory[seasonHistory.length - 1].newElo
+            : null;
+
+        return { player: player.name, wins, played, seasonalElo };
+      })
+      .filter((p) => p.played / matches.length > 0.3);
+
+    const MIN_MATCHES = 3;
+
+    const byWinRate = [...playerStats]
+      .filter((p) => p.played >= MIN_MATCHES)
+      .sort((a, b) => b.wins / b.played - a.wins / a.played || b.wins - a.wins)
+      .slice(0, 3)
+      .map((p) => ({
+        player: p.player,
+        value: Math.round((p.wins / p.played) * 100),
+        wins: p.wins,
+        played: p.played,
+      }));
+
+    const byWins = [...playerStats]
+      .sort((a, b) => b.wins - a.wins || b.wins / b.played - a.wins / a.played)
+      .slice(0, 3)
+      .map((p) => ({
+        player: p.player,
+        value: p.wins,
+        played: p.played,
+      }));
+
+    const bySeasonalElo = [...playerStats]
+      .filter((p) => p.seasonalElo !== null)
+      .sort((a, b) => (b.seasonalElo as number) - (a.seasonalElo as number))
+      .slice(0, 3)
+      .map((p) => ({
+        player: p.player,
+        value: p.seasonalElo as number,
+      }));
+
+    return { byWinRate, byWins, bySeasonalElo };
   }
 }
