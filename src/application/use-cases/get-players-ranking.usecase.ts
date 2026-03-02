@@ -3,6 +3,25 @@ import { PlayerRepository } from '@domain/ports/player.repository';
 import { MatchRepository } from '@domain/ports/match.repository';
 import { PlayerEloDTO } from '@application/dto/player-ranking.response.dto';
 
+function getRecentForm(playerId: string, matches: any[]): ('W' | 'L' | 'D')[] {
+  return matches
+    .filter(
+      (m) =>
+        m.teamA.players.some((p: any) => p.id === playerId) ||
+        m.teamB.players.some((p: any) => p.id === playerId),
+    )
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .slice(-5)
+    .map((match) => {
+      const inTeamA = match.teamA.players.some((p: any) => p.id === playerId);
+      const won = inTeamA ? match.winner === 'A' : match.winner === 'B';
+      const lost = inTeamA ? match.winner === 'B' : match.winner === 'A';
+      if (won) return 'W';
+      if (lost) return 'L';
+      return 'D';
+    });
+}
+
 @Injectable()
 export class GetPlayersRankingUseCase {
   constructor(
@@ -28,6 +47,7 @@ export class GetPlayersRankingUseCase {
         position: index + 1,
         name: p.name,
         elo: p.elo,
+        recentForm: getRecentForm(p.id, matches),
       }));
   }
 }

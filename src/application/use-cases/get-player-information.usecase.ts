@@ -41,6 +41,7 @@ export interface PlayerInformationDto {
     maxLossStreak: number;
   };
   attendanceRate: number;
+  recentForm: ('W' | 'L' | 'D')[];
 }
 
 @Injectable()
@@ -184,6 +185,16 @@ export class GetPlayerInformationUseCase {
       }
     }
 
+    // Calcular forma reciente (últimos 5 partidos)
+    const recentForm: ('W' | 'L' | 'D')[] = sortedMatches.slice(-5).map((match) => {
+      const inTeamA = match.teamA.players.some((p: any) => p.id === player.id);
+      const won = inTeamA ? match.winner === 'A' : match.winner === 'B';
+      const lost = inTeamA ? match.winner === 'B' : match.winner === 'A';
+      if (won) return 'W';
+      if (lost) return 'L';
+      return 'D';
+    });
+
     // Calcular % de asistencia
     const totalMatches = matches.length;
     const attendanceRate =
@@ -221,6 +232,7 @@ export class GetPlayerInformationUseCase {
         maxLossStreak,
       },
       attendanceRate,
+      recentForm,
     };
   }
 }
