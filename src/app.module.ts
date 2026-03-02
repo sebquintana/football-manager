@@ -16,12 +16,18 @@ import { GetPlayerInformationUseCase } from '@application/use-cases/get-player-i
 import { GetPlayersRankingUseCase } from '@application/use-cases/get-players-ranking.usecase';
 import { GetGeneralStatisticsUseCase } from '@application/use-cases/get-general-statistics.usecase';
 import { UpdatePlayerEloUseCase } from '@application/use-cases/update-player-elo.usecase';
+import { SavePendingMatchUseCase } from '@application/use-cases/save-pending-match.usecase';
+import { GetPendingMatchUseCase } from '@application/use-cases/get-pending-match.usecase';
+import { ConfirmPendingMatchUseCase } from '@application/use-cases/confirm-pending-match.usecase';
+import { DeletePendingMatchUseCase } from '@application/use-cases/delete-pending-match.usecase';
 
 import { PlayerEntity } from '@infrastructure/adapters/persistence/typeorm/entities/player.entity';
 import { MatchEntity } from '@infrastructure/adapters/persistence/typeorm/entities/match.entity';
 import { MatchPlayerEntity } from '@infrastructure/adapters/persistence/typeorm/entities/match-player.entity';
+import { PendingMatchEntity } from '@infrastructure/adapters/persistence/typeorm/entities/pending-match.entity';
 import { TypeOrmPlayerRepository } from '@infrastructure/adapters/persistence/typeorm/player.repository.typeorm';
 import { TypeOrmMatchRepository } from '@infrastructure/adapters/persistence/typeorm/match.repository.typeorm';
+import { TypeOrmPendingMatchRepository } from '@infrastructure/adapters/persistence/typeorm/typeorm-pending-match.repository';
 import { NoOpTeamRepository } from '@infrastructure/adapters/persistence/typeorm/team.repository.noop';
 
 @Module({
@@ -30,10 +36,10 @@ import { NoOpTeamRepository } from '@infrastructure/adapters/persistence/typeorm
       type: 'postgres',
       url: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false },
-      entities: [PlayerEntity, MatchEntity, MatchPlayerEntity],
-      synchronize: false,
+      entities: [PlayerEntity, MatchEntity, MatchPlayerEntity, PendingMatchEntity],
+      synchronize: true,
     }),
-    TypeOrmModule.forFeature([PlayerEntity, MatchEntity, MatchPlayerEntity]),
+    TypeOrmModule.forFeature([PlayerEntity, MatchEntity, MatchPlayerEntity, PendingMatchEntity]),
   ],
   controllers: [
     PlayerController,
@@ -53,6 +59,10 @@ import { NoOpTeamRepository } from '@infrastructure/adapters/persistence/typeorm
     GetPlayerInformationUseCase,
     GetGeneralStatisticsUseCase,
     UpdatePlayerEloUseCase,
+    SavePendingMatchUseCase,
+    GetPendingMatchUseCase,
+    ConfirmPendingMatchUseCase,
+    DeletePendingMatchUseCase,
     {
       provide: 'PlayerRepository',
       useClass: TypeOrmPlayerRepository,
@@ -64,6 +74,10 @@ import { NoOpTeamRepository } from '@infrastructure/adapters/persistence/typeorm
     {
       provide: 'TeamRepository',
       useClass: NoOpTeamRepository,
+    },
+    {
+      provide: 'PendingMatchRepository',
+      useClass: TypeOrmPendingMatchRepository,
     },
   ],
 })
