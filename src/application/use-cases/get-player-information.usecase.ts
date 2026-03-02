@@ -42,6 +42,18 @@ export interface PlayerInformationDto {
   };
   attendanceRate: number;
   recentForm: ('V' | 'D' | 'E')[];
+  rivals: {
+    hardestOpponent: string | null;
+    easiestOpponent: string | null;
+    opponents: Array<{
+      opponent: string;
+      victories: number;
+      losses: number;
+      draws: number;
+      matches: number;
+      winRate: number;
+    }>;
+  };
 }
 
 @Injectable()
@@ -136,6 +148,52 @@ export class GetPlayerInformationUseCase {
       bestMate = significantMates[0].mate;
       significantMates.sort((a, b) => a.winRate - b.winRate || b.matches - a.matches);
       worstMate = significantMates[0].mate;
+    }
+
+    // --- Calcular rivales ---
+    const rivalMap: Record<
+      string,
+      { opponent: string; victories: number; draws: number; losses: number; matches: number }
+    > = {};
+    for (const match of playerMatches) {
+      let opponentTeamPlayers, won, lost;
+      if (match.teamA.players.some((p: any) => p.id === player.id)) {
+        opponentTeamPlayers = match.teamB.players;
+        won = match.winner === 'A';
+        lost = match.winner === 'B';
+      } else {
+        opponentTeamPlayers = match.teamA.players;
+        won = match.winner === 'B';
+        lost = match.winner === 'A';
+      }
+      const draw = match.winner === 'draw';
+
+      for (const opp of opponentTeamPlayers) {
+        if (!rivalMap[opp.id]) {
+          rivalMap[opp.id] = { opponent: opp.name, victories: 0, draws: 0, losses: 0, matches: 0 };
+        }
+        rivalMap[opp.id].matches++;
+        if (won) rivalMap[opp.id].victories++;
+        else if (lost) rivalMap[opp.id].losses++;
+        else if (draw) rivalMap[opp.id].draws++;
+      }
+    }
+    const opponentsArr = Object.values(rivalMap).map((r) => ({
+      ...r,
+      winRate: r.matches > 0 ? Math.round((r.victories / r.matches) * 100) : 0,
+    }));
+
+    const significantOpponents = opponentsArr.filter(
+      (r) => r.matches >= minimumMatchesRequired,
+    );
+
+    let hardestOpponent = null;
+    let easiestOpponent = null;
+    if (significantOpponents.length > 0) {
+      significantOpponents.sort((a, b) => a.winRate - b.winRate || b.matches - a.matches);
+      hardestOpponent = significantOpponents[0].opponent;
+      significantOpponents.sort((a, b) => b.winRate - a.winRate || b.matches - a.matches);
+      easiestOpponent = significantOpponents[0].opponent;
     }
 
     // --- Calcular rachas ---
@@ -233,6 +291,11 @@ export class GetPlayerInformationUseCase {
       },
       attendanceRate,
       recentForm,
+      rivals: {
+        hardestOpponent,
+        easiestOpponent,
+        opponents: opponentsArr,
+      },
     };
   }
 }
