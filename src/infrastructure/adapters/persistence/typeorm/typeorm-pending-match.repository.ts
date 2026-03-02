@@ -24,13 +24,23 @@ export class TypeOrmPendingMatchRepository implements PendingMatchRepository {
   async findLatest(): Promise<PendingMatch | null> {
     const entity = await this.repo.findOne({ order: { createdAt: 'DESC' } });
     if (!entity) return null;
-    return { id: entity.id, teamANames: entity.teamANames, teamBNames: entity.teamBNames, createdAt: entity.createdAt };
+    return {
+      id: entity.id,
+      teamANames: entity.teamANames,
+      teamBNames: entity.teamBNames,
+      createdAt: entity.createdAt,
+    };
   }
 
   async findById(id: string): Promise<PendingMatch | null> {
     const entity = await this.repo.findOneBy({ id });
     if (!entity) return null;
-    return { id: entity.id, teamANames: entity.teamANames, teamBNames: entity.teamBNames, createdAt: entity.createdAt };
+    return {
+      id: entity.id,
+      teamANames: entity.teamANames,
+      teamBNames: entity.teamBNames,
+      createdAt: entity.createdAt,
+    };
   }
 
   async delete(id: string): Promise<void> {
