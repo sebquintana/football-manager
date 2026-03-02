@@ -1,7 +1,8 @@
-import { IsString, IsInt, Min } from 'class-validator';
+import { IsString, IsInt, Min, IsNotEmpty } from 'class-validator';
 
 export class CreatePlayerDto {
   @IsString()
+  @IsNotEmpty()
   name!: string;
 
   @IsInt()

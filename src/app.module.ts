@@ -37,7 +37,7 @@ import { NoOpTeamRepository } from '@infrastructure/adapters/persistence/typeorm
       url: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false },
       entities: [PlayerEntity, MatchEntity, MatchPlayerEntity, PendingMatchEntity],
-      synchronize: true,
+      synchronize: false,
     }),
     TypeOrmModule.forFeature([PlayerEntity, MatchEntity, MatchPlayerEntity, PendingMatchEntity]),
   ],

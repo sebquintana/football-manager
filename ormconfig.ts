@@ -1,6 +1,6 @@
-import { MatchPlayerPersistence } from '@infrastructure/adapters/persistence/match-player.entity';
-import { MatchPersistence } from '@infrastructure/adapters/persistence/match.entity';
-import { PlayerPersistence } from '@infrastructure/adapters/persistence/player.entity';
+import { MatchPlayerEntity } from './src/infrastructure/adapters/persistence/typeorm/entities/match-player.entity';
+import { MatchEntity } from './src/infrastructure/adapters/persistence/typeorm/entities/match.entity';
+import { PlayerEntity } from './src/infrastructure/adapters/persistence/typeorm/entities/player.entity';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 const config: TypeOrmModuleOptions = {
@@ -10,8 +10,8 @@ const config: TypeOrmModuleOptions = {
   username: 'your_username',
   password: 'your_password',
   database: 'football_manager',
-  entities: [PlayerPersistence, MatchPersistence, MatchPlayerPersistence],
-  synchronize: true, // Set to false in production
+  entities: [PlayerEntity, MatchEntity, MatchPlayerEntity],
+  synchronize: false,
 };
 
 export default config;
