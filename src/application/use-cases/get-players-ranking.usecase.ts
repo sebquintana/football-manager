@@ -3,7 +3,7 @@ import { PlayerRepository } from '@domain/ports/player.repository';
 import { MatchRepository } from '@domain/ports/match.repository';
 import { PlayerEloDTO } from '@application/dto/player-ranking.response.dto';
 
-function getRecentForm(playerId: string, matches: any[]): ('W' | 'L' | 'D')[] {
+function getRecentForm(playerId: string, matches: any[]): ('V' | 'D' | 'E')[] {
   return matches
     .filter(
       (m) =>
@@ -16,9 +16,9 @@ function getRecentForm(playerId: string, matches: any[]): ('W' | 'L' | 'D')[] {
       const inTeamA = match.teamA.players.some((p: any) => p.id === playerId);
       const won = inTeamA ? match.winner === 'A' : match.winner === 'B';
       const lost = inTeamA ? match.winner === 'B' : match.winner === 'A';
-      if (won) return 'W';
-      if (lost) return 'L';
-      return 'D';
+      if (won) return 'V';
+      if (lost) return 'D';
+      return 'E';
     });
 }
 
