@@ -32,14 +32,19 @@ export class GetPlayersRankingUseCase {
   ) {}
 
   async execute(): Promise<PlayerEloDTO[]> {
+    const currentYear = new Date().getFullYear();
     const players = await this.playerRepository.findAll();
-    const matches = await this.matchRepository.findAll();
-    const totalMatches = matches.length;
+    const yearMatches = await this.matchRepository.findAll(currentYear);
+    const totalYearMatches = yearMatches.length;
 
     return players
       .filter((player) => {
-        // Filtrar solo jugadores con más del 50% de asistencia
-        const attendanceRate = totalMatches > 0 ? player.totalMatchesPlayed / totalMatches : 0;
+        const yearMatchesPlayed = yearMatches.filter(
+          (m) =>
+            m.teamA.players.some((p) => p.id === player.id) ||
+            m.teamB.players.some((p) => p.id === player.id),
+        ).length;
+        const attendanceRate = totalYearMatches > 0 ? yearMatchesPlayed / totalYearMatches : 0;
         return attendanceRate > 0.3;
       })
       .sort((a, b) => b.elo - a.elo)
@@ -47,7 +52,7 @@ export class GetPlayersRankingUseCase {
         position: index + 1,
         name: p.name,
         elo: p.elo,
-        recentForm: getRecentForm(p.id, matches),
+        recentForm: getRecentForm(p.id, yearMatches),
       }));
   }
 }
