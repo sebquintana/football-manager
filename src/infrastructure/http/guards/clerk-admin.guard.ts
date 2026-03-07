@@ -23,12 +23,12 @@ export class ClerkAdminGuard implements CanActivate {
       const payload = await verifyToken(token, {
         secretKey: process.env.CLERK_SECRET_KEY,
       });
-      const role = (payload.publicMetadata as { role?: string })?.role;
+      const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+      const adminUser = await clerk.users.getUser(payload.sub);
+      const role = (adminUser.publicMetadata as { role?: string })?.role;
       if (role !== 'admin') {
         throw new ForbiddenException('Admin role required');
       }
-      const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
-      const adminUser = await clerk.users.getUser(payload.sub);
       request.adminEmail = adminUser.primaryEmailAddress?.emailAddress ?? payload.sub;
       return true;
     } catch (err) {
