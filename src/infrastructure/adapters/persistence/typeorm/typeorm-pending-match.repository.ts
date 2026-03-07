@@ -22,7 +22,7 @@ export class TypeOrmPendingMatchRepository implements PendingMatchRepository {
   }
 
   async findLatest(): Promise<PendingMatch | null> {
-    const entity = await this.repo.findOne({ order: { createdAt: 'DESC' } });
+    const entity = await this.repo.findOne({ where: {}, order: { createdAt: 'DESC' } });
     if (!entity) return null;
     return {
       id: entity.id,
